@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <ListView
+        android:id="@+id/listSensor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:layout_weight="1"
+        tools:ignore="Suspicious0dp"
+        />
+
+    <Button android:id="@+id/start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Validate"
+        android:onClick="onClickRun"
+        android:textColor="@color/colorPrimaryDark"/>
+</LinearLayout>
