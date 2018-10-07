@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -35,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     //to display available sensor
     protected List<ComplexSensor> availableSensors = new ArrayList<ComplexSensor>();
-    //send to next Activity of corse
-    protected List<ComplexSensor> selectedSensors = new ArrayList<ComplexSensor>();
 
-
+    protected List<DataForNextActivity> dataForNextActivities = new ArrayList<DataForNextActivity>();
 
 
 
@@ -80,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
         /**
          * Events on ListView
          */
@@ -90,43 +86,24 @@ public class MainActivity extends AppCompatActivity {
         listSensors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-
                 ComplexSensor actualSensor = availableSensors.get(i);
-
-                if (!actualSensor.isSelectedInListView()){
+                if (!actualSensor.isSelected()){
 
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    actualSensor.setSelectedInListView(true);
                     actualSensor.setSelected(true);
-                    //set frequency
-                    actualSensor.setFrequency(0.02);
+                    dataForNextActivities.add(actualSensor.getDataOfSensor());
 
-
+                    /*  changement d'une seule ligne
                     if (actualSensor.getSensor().getName() == new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER).getSensor().getName()){
                         TextView  nameSensor = (TextView)view.findViewById(R.id.nameSensor);
                         nameSensor.setText("change !!!");
                     }
-
-
-                    selectedSensors.add(actualSensor);
-
+                    */
 
                 }else {
                     view.setBackgroundColor(getResources().getColor(R.color.colorBlank));
-                    actualSensor.setSelectedInListView(false);
                     actualSensor.setSelected(false);
-                    selectedSensors.remove(actualSensor);
-                }
-
-
-                if (selectedSensors.isEmpty()){
-                    System.out.println("Empty List");
-                }else {
-                    for (ComplexSensor sensor : selectedSensors){
-                        System.out.println(sensor.getSensor().getName());
-                    }
+                    dataForNextActivities.remove(actualSensor.getDataOfSensor());
                 }
             }
         });
@@ -139,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickRun(View view) {
 
-        Intent i = new Intent(this, RunSensorsActivity.class);
-
-        startActivity(i);
+        Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
     }
 
@@ -165,23 +144,18 @@ public class MainActivity extends AppCompatActivity {
 
             TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
             ComplexSensor sensor = getItem(position);
+            nameSensor.setText(sensor.getSensor().getName());
 
-            /**
-             * Dynamic Rows
-             */
+            /* Dynamic Rows to Display before Events
             if (sensor.getSensor().getName() == new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER).getSensor().getName()){
                // Specification for View of Accelero
                 nameSensor.setText(sensor.getSensor().getName());
             }else {
                 nameSensor.setText(sensor.getSensor().getName());
             }
-
-
-
+            */
 
             return root;
         }
     }
-
-
 }

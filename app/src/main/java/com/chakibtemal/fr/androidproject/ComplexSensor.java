@@ -5,31 +5,27 @@ import android.hardware.SensorManager;
 
 public class ComplexSensor  {
     private Sensor sensor = null;
-    private double frequency = SensorManager.SENSOR_DELAY_NORMAL;
     private boolean isSelected = false;
     private boolean isAvailable = false;
-    private boolean isSelectedInListView = false;
-
+    private DataForNextActivity dataOfSensor;
 
 
 
     ComplexSensor(SensorManager sensorManager, int type){
         this.sensor = sensorManager.getDefaultSensor(type);
-    }
-    public double getFrequency() {
-        return frequency;
+        this.dataOfSensor = new DataForNextActivity();
+        this.dataOfSensor.setName(this.sensor.getName());
+
     }
 
-    public void setFrequency(double frequency) {
-        this.frequency = frequency;
-    }
-    public boolean isSelectedInListView() {
-        return isSelectedInListView;
+    public DataForNextActivity getDataOfSensor() {
+        return dataOfSensor;
     }
 
-    public void setSelectedInListView(boolean selectedInListView) {
-        isSelectedInListView = selectedInListView;
+    public void setDataOfSensor(DataForNextActivity dataOfSensor) {
+        this.dataOfSensor = dataOfSensor;
     }
+
 
     public boolean isAvailable() {
         return isAvailable;
