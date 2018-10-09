@@ -29,8 +29,6 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         this.mContext = mContext;
     }
 
-
-
     @Override
     public int getCount() {
         return mData.size();
@@ -45,8 +43,6 @@ public class BasicSpinnerAdapter extends BaseAdapter {
     public long getItemId(int i) {
         return 0;
     }
-
-
 
     @NonNull
     @Override
