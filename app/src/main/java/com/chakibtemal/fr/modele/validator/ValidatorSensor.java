@@ -1,5 +1,7 @@
 package com.chakibtemal.fr.androidproject;
 
+import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
+
 import java.util.List;
 
 public class ValidatorSensor {
