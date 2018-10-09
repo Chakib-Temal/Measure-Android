@@ -15,6 +15,7 @@ public class ComplexSensor  {
         this.sensor = sensorManager.getDefaultSensor(type);
         this.dataOfSensor = new DataForNextActivity();
         this.dataOfSensor.setName(this.sensor.getName());
+        this.dataOfSensor.setType(this.sensor.getType());
 
     }
 

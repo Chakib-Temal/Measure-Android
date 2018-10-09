@@ -7,17 +7,28 @@ import android.os.Parcelable;
 public class DataForNextActivity implements Parcelable {
     private double frequency ;
     private String name ;
+    private int type;
+
 
 
     public DataForNextActivity(){
         frequency =  SensorManager.SENSOR_DELAY_NORMAL;
         name = " ";
-
+        type = 0;
     }
     public DataForNextActivity(Parcel in) {
        frequency =  in.readDouble();
        name = in.readString();
+       type = in.readInt();
 
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public double getFrequency() {
@@ -47,6 +58,7 @@ public class DataForNextActivity implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeDouble(frequency);
         parcel.writeString(name);
+        parcel.writeInt(type);
 
     }
 
