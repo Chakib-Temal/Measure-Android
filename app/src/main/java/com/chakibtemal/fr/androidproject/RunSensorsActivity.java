@@ -25,16 +25,11 @@ import java.util.List;
 
 public class RunSensorsActivity extends AppCompatActivity {
 
-    private List<DataForNextActivity> selectedSensors = new ArrayList<DataForNextActivity>();
-
+    protected List<DataForNextActivity> selectedSensors = new ArrayList<DataForNextActivity>();
     protected SensorManager sensorManager = null;
-
-    private List<ComplexSensor> mySensors = new ArrayList<ComplexSensor>();
-
+    protected List<ComplexSensor> mySensors = new ArrayList<ComplexSensor>();
     protected ArrayAdapter<ComplexSensor> adapter;
-
     protected ListView listSensors = null;
-
 
     protected float [] valuesOfGyroscope = {0, 0, 0};
     protected float [] valuesOfAccelerometer = {0, 0, 0};
@@ -77,7 +72,6 @@ public class RunSensorsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
         for (ComplexSensor sensor : this.mySensors){
             int type =sensor.getSensor().getType();
 
@@ -89,8 +83,6 @@ public class RunSensorsActivity extends AppCompatActivity {
                 sensorManager.registerListener(proximityEventListner, sensor.getSensor(), (int) sensor.getDataOfSensor().getFrequency());
             }
         }
-
-
     }
 
     @Override
@@ -107,11 +99,6 @@ public class RunSensorsActivity extends AppCompatActivity {
                 sensorManager.unregisterListener(proximityEventListner, sensor.getSensor());
             }
         }
-
-
-
-
-
     }
 
     final SensorEventListener acceleroEvenetListner = new SensorEventListener() {
@@ -131,7 +118,6 @@ public class RunSensorsActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     };
-
 
     final SensorEventListener proximityEventListner = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -154,7 +140,6 @@ public class RunSensorsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             View root = inflater.inflate(R.layout.sensorworkitem, null);
@@ -192,6 +177,5 @@ public class RunSensorsActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 
 }

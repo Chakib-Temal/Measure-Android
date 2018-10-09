@@ -9,8 +9,6 @@ public class ComplexSensor  {
     private boolean isAvailable = false;
     private DataForNextActivity dataOfSensor;
 
-
-
     public ComplexSensor(SensorManager sensorManager, int type){
         this.sensor = sensorManager.getDefaultSensor(type);
         this.dataOfSensor = new DataForNextActivity();
@@ -27,7 +25,6 @@ public class ComplexSensor  {
         this.dataOfSensor = dataOfSensor;
     }
 
-
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -35,7 +32,6 @@ public class ComplexSensor  {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
-
 
     public Sensor getSensor() {
         return sensor;

@@ -9,8 +9,6 @@ public class DataForNextActivity implements Parcelable {
     private String name ;
     private int type;
 
-
-
     public DataForNextActivity(){
         frequency =  SensorManager.SENSOR_DELAY_NORMAL;
         name = " ";
@@ -20,7 +18,6 @@ public class DataForNextActivity implements Parcelable {
        frequency =  in.readDouble();
        name = in.readString();
        type = in.readInt();
-
     }
 
     public int getType() {
@@ -47,8 +44,7 @@ public class DataForNextActivity implements Parcelable {
         this.name = name;
     }
 
-
-
+    
     @Override
     public int describeContents() {
         return 0;
@@ -59,7 +55,6 @@ public class DataForNextActivity implements Parcelable {
         parcel.writeDouble(frequency);
         parcel.writeString(name);
         parcel.writeInt(type);
-
     }
 
     public static final Parcelable.Creator<DataForNextActivity> CREATOR = new Parcelable.Creator<DataForNextActivity>()
