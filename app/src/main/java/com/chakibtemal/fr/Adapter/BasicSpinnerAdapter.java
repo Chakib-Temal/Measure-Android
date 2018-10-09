@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.chakibtemal.fr.androidproject.ComplexSensor;
+import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.androidproject.R;
 
 import java.util.ArrayList;

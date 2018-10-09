@@ -1,4 +1,4 @@
-package com.chakibtemal.fr.androidproject;
+package com.chakibtemal.fr.modele.sharedResources;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -11,7 +11,7 @@ public class ComplexSensor  {
 
 
 
-    ComplexSensor(SensorManager sensorManager, int type){
+    public ComplexSensor(SensorManager sensorManager, int type){
         this.sensor = sensorManager.getDefaultSensor(type);
         this.dataOfSensor = new DataForNextActivity();
         this.dataOfSensor.setName(this.sensor.getName());

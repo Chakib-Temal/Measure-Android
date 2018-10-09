@@ -1,4 +1,4 @@
-package com.chakibtemal.fr.androidproject;
+package com.chakibtemal.fr.modele.sharedResources;
 
 import android.hardware.SensorManager;
 import android.os.Parcel;

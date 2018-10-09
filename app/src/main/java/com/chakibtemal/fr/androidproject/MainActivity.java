@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
+import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
+import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
+import com.chakibtemal.fr.modele.validator.ValidatorSensor;
 
 import java.util.ArrayList;
 import java.util.List;

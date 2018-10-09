@@ -1,4 +1,4 @@
-package com.chakibtemal.fr.androidproject;
+package com.chakibtemal.fr.modele.validator;
 
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 

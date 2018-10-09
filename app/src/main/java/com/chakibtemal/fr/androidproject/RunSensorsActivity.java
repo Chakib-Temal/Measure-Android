@@ -17,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
+import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
