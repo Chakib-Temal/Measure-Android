@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
+import com.chakibtemal.fr.modele.calibrationSensor.CalibrateTime;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 import com.chakibtemal.fr.modele.validator.ValidatorSensor;
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private List<Double> itemSpinner = new ArrayList<Double>();
     private BasicSpinnerAdapter adapter2;
 
+
+    private Context context;
+
+    public static long timeForOneShoot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         itemSpinner.add(new Double(0));itemSpinner.add(new Double(1));
         itemSpinner.add(new Double(2));itemSpinner.add(new Double(3));
-
+        this.context = this;
         /**
          * Configuration for Sensors
          */
@@ -73,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
         adapter2 = new BasicSpinnerAdapter(availableSensors, itemSpinner, this);
         listSensors = (ListView) findViewById(R.id.listSensor);
         listSensors.setAdapter(adapter2);
+
+        /**
+         * Calibrage du temps
+         * boutton retour nous donne la valeur et a chaque fois qu'on relance l'activity ya un nv calibrage
+         */
+        CalibrateTime calibrateTime = new CalibrateTime();
+        calibrateTime.calibrateTimeForSensor(this);
 
 
         /**
@@ -105,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //end OnCreate(); here you can complete programme
+
+
 
     }
 
@@ -123,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        System.out.println("Temps d'exécution " + timeForOneShoot);
+        // le temps qu'on recoit * 10^9  / timeForOneShoot
+
         onResume();
     }
 
