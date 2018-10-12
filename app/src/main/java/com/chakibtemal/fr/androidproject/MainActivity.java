@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onBackPressed() {
 
+
         System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
         "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
         onResume();
