@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-
     private int levelSpeedCompter = 0;
     private int [] inverseModeSpeed = {3,2,1,0};
     private long [] resultsOfCalibrage = {0,0,0,0};
