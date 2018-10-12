@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
         startTime = System.nanoTime();
         sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
-
     }
 
     @Override
