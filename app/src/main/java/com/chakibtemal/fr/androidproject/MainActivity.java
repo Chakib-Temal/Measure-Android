@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-
     private int levelSpeedCompter = 0;
     private int [] inverseModeSpeed = {3,2,1,0};
     private long [] resultsOfCalibrage = {0,0,0,0};
@@ -150,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
         startTime = System.nanoTime();
         sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
-
     }
 
     @Override
