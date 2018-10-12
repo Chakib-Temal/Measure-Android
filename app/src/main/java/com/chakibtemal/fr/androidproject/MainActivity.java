@@ -3,6 +3,8 @@ package com.chakibtemal.fr.androidproject;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,7 +17,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
-import com.chakibtemal.fr.modele.calibrationSensor.CalibrateTime;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 import com.chakibtemal.fr.modele.validator.ValidatorSensor;
@@ -23,7 +24,7 @@ import com.chakibtemal.fr.modele.validator.ValidatorSensor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     protected ListView listSensors = null;
     protected Button buttonRun = null;
@@ -41,10 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Double> itemSpinner = new ArrayList<Double>();
     private BasicSpinnerAdapter adapter2;
 
+    private int sampleNumber = 5;
+    private long startTime ;
 
-    private Context context;
-
-    public static long timeForOneShoot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         itemSpinner.add(new Double(0));itemSpinner.add(new Double(1));
         itemSpinner.add(new Double(2));itemSpinner.add(new Double(3));
-        this.context = this;
+
         /**
          * Configuration for Sensors
          */
@@ -62,15 +62,12 @@ public class MainActivity extends AppCompatActivity {
         this.aproximity = new ComplexSensor(sensorManager, Sensor.TYPE_PROXIMITY);
         this.buttonRun = (Button) findViewById(R.id.start);
 
-
         /**
          *
          here we recover the availability of sensors with static variable(ValidatorSensor),
          finally we can use ComplexSensor to find the state of the sensor itself
          */
-
         ValidatorSensor.returnResults(this.accelerometer, this.gyroscope, this.aproximity, this.availableSensors);
-
 
         /**
          * Adapter for the View
@@ -80,12 +77,9 @@ public class MainActivity extends AppCompatActivity {
         listSensors.setAdapter(adapter2);
 
         /**
-         * Calibrage du temps
-         * boutton retour nous donne la valeur et a chaque fois qu'on relance l'activity ya un nv calibrage
+         * Calibrage Sensors // in the future we have to create a new activity just for this action
          */
-        CalibrateTime calibrateTime = new CalibrateTime();
-        calibrateTime.calibrateTimeForSensor(this);
-
+        this.calibrateTimeSensor();
 
         /**
          * Events on ListView
@@ -118,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //end OnCreate(); here you can complete programme
-
-
-
     }
 
     /**
@@ -138,10 +129,54 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        System.out.println("Temps d'exécution " + timeForOneShoot);
-        // le temps qu'on recoit * 10^9  / timeForOneShoot
 
+        System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
+        "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
         onResume();
     }
 
+
+
+    private int levelSpeedCompter = 0;
+    private int [] inverseModeSpeed = {3,2,1,0};
+    private long [] resultsOfCalibrage = {0,0,0,0};
+    private int frequecyCompter = 0;
+    private Sensor sensor1;
+
+    /**
+     * Calibration of Sensor
+     */
+    public void calibrateTimeSensor(){
+        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        startTime = System.nanoTime();
+        sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        frequecyCompter++;
+        if (frequecyCompter == sampleNumber){
+            resultsOfCalibrage[levelSpeedCompter] = (System.nanoTime() - startTime) / sampleNumber;
+            sensorManager.unregisterListener(this, sensor1);
+            frequecyCompter = 0;
+            levelSpeedCompter++;
+            startTime = System.nanoTime();
+            if (levelSpeedCompter <= 3){
+                sensorManager.registerListener(this, sensor1 , inverseModeSpeed[levelSpeedCompter], 10000000 );
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
+
+    /**
+     * if we leave the application we have to stop the sensor
+     */
+    @Override
+    protected void onPause() {
+        sensorManager.unregisterListener(this, sensor1);
+        super.onPause();
+    }
 }
