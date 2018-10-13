@@ -4,4 +4,6 @@
     <string name="runCalibration">lancer le calibrage </string>
     <string name="goToCalibrationActivity">aller au calibrage</string>
 
+    <string name="alert">Reussi</string>
+    <string name="AlertMessage">calibrage reussi</string>
 </resources>

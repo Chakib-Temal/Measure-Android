@@ -1,6 +1,8 @@
 package com.chakibtemal.fr.androidproject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -72,6 +74,20 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
                 preference.editor.commit();
                 levelSpeedCompter = 0;
                 body.removeView(progressBar);
+
+                AlertDialog alertDialog = new AlertDialog.Builder(CalibrageSensorActivity.this).create();
+                alertDialog.setTitle(R.string.alert);
+
+                alertDialog.setMessage(getResources().getString(R.string.AlertMessage));
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 body.addView(startButton);
             }
         }

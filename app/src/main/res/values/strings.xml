@@ -3,4 +3,7 @@
     <string name="Validate">Run </string>
     <string name="runCalibration">Start Calibration </string>
     <string name="goToCalibrationActivity">go calibrate sensor</string>
+
+    <string name="alert">Its ok</string>
+    <string name="AlertMessage">Calibration finish</string>
 </resources>
