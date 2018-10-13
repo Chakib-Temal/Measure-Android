@@ -19,6 +19,12 @@
         android:layout_weight="1"
         tools:ignore="Suspicious0dp"
         />
+    <Button android:id="@+id/gotoCalibrageActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/goToCalibrationActivity"
+        android:onClick="onClickRun"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <Button android:id="@+id/start"
         android:layout_width="match_parent"
