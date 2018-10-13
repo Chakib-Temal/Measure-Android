@@ -6,4 +6,7 @@
 
     <string name="alert">Its ok</string>
     <string name="AlertMessage">Calibration finish</string>
+
+    <string name="warning">warning</string>
+    <string name="warningMessage">you should calibrate your app</string>
 </resources>

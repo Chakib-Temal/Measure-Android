@@ -74,20 +74,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
                 preference.editor.commit();
                 levelSpeedCompter = 0;
                 body.removeView(progressBar);
-
-                AlertDialog alertDialog = new AlertDialog.Builder(CalibrageSensorActivity.this).create();
-                alertDialog.setTitle(R.string.alert);
-
-                alertDialog.setMessage(getResources().getString(R.string.AlertMessage));
-
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-
+                showAlert(R.string.alert, R.string.AlertMessage );
                 body.addView(startButton);
             }
         }
@@ -107,8 +94,31 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(CalibrageSensorActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        SharedPreferencesHelper preferences  = new SharedPreferencesHelper(this);
+        if (!preferences.preferences.getBoolean("alreadyCalibred", false)){
+            showAlert(R.string.warning, R.string.warningMessage );
+            onResume();
+        }else {
+            Intent intent = new Intent(CalibrageSensorActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
+    public void showAlert(int title,int message ){
+
+        AlertDialog alertDialog = new AlertDialog.Builder(CalibrageSensorActivity.this).create();
+        alertDialog.setTitle(title);
+
+        alertDialog.setMessage(getResources().getString(message));
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

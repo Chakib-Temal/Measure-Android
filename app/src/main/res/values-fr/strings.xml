@@ -6,4 +6,7 @@
 
     <string name="alert">Reussi</string>
     <string name="AlertMessage">calibrage reussi</string>
+
+    <string name="warning">Attention</string>
+    <string name="warningMessage">vous devez calibrer d'abord</string>
 </resources>
