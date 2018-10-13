@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         listSensors.setAdapter(adapter);
         goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
 
-
-
         /**
          * Events on ListView
          */
