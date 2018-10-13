@@ -7,9 +7,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
 
@@ -24,15 +26,29 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     private long startTime ;
     private SensorManager sensorManager = null;
     private SharedPreferencesHelper preference;
+    private ConstraintLayout body;
 
-    private Button start;
+    private Button startButton;
+    private ProgressBar progressBar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrage_sensor);
         this.sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         this.preference = new SharedPreferencesHelper(this);
-        start = (Button) findViewById(R.id.starting);
+        this.body = (ConstraintLayout) findViewById(R.id.body);
+        this.startButton = (Button) findViewById(R.id.starting);
+        this.progressBar = (ProgressBar) findViewById(R.id.timeCalibration);
+        this.body.removeView(progressBar);
+    }
+
+    public void calibrateTimeSensors(View view) {
+        body.removeView(startButton);
+        body.addView(progressBar);
+        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        startTime = System.nanoTime();
+        sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
     }
 
     @Override
@@ -55,6 +71,8 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
                 preference.editor.putLong("fastestMode", resultsOfCalibrage[3]);
                 preference.editor.commit();
                 levelSpeedCompter = 0;
+                body.removeView(progressBar);
+                body.addView(startButton);
             }
         }
     }
@@ -69,12 +87,6 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     protected void onPause() {
         sensorManager.unregisterListener(this, sensor1);
         super.onPause();
-    }
-
-    public void calibrateTimeSensors(View view) {
-        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
-        startTime = System.nanoTime();
-        sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
     }
 
     @Override
