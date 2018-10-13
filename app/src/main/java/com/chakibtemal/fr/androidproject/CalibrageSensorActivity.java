@@ -1,13 +1,86 @@
 package com.chakibtemal.fr.androidproject;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
-public class CalibrageSensorActivity extends AppCompatActivity {
+import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
 
+public class CalibrageSensorActivity extends AppCompatActivity implements SensorEventListener {
+
+    private int levelSpeedCompter = 0;
+    private int [] inverseModeSpeed = {3,2,1,0};
+    private long [] resultsOfCalibrage = {0,0,0,0};
+    private int frequecyCompter = 0;
+    private Sensor sensor1;
+    private int sampleNumber = 4;
+    private long startTime ;
+    private SensorManager sensorManager = null;
+    private SharedPreferencesHelper preference;
+
+    private Button start;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrage_sensor);
+        this.sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        this.preference = new SharedPreferencesHelper(this);
+        start = (Button) findViewById(R.id.starting);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        frequecyCompter++;
+        if (frequecyCompter == sampleNumber){
+            resultsOfCalibrage[levelSpeedCompter] = (System.nanoTime() - startTime) / sampleNumber;
+            sensorManager.unregisterListener(this, sensor1);
+            frequecyCompter = 0;
+            levelSpeedCompter++;
+            startTime = System.nanoTime();
+            if (levelSpeedCompter <= 3){
+                sensorManager.registerListener(this, sensor1 , inverseModeSpeed[levelSpeedCompter], 10000000 );
+            }
+            if (levelSpeedCompter == 4){
+                preference.editor.putBoolean("alreadyCalibred", true);
+                preference.editor.putLong("normalMode", resultsOfCalibrage[0]);
+                preference.editor.putLong("uiMode", resultsOfCalibrage[1]);
+                preference.editor.putLong("gameMode", resultsOfCalibrage[2]);
+                preference.editor.putLong("fastestMode", resultsOfCalibrage[3]);
+                preference.editor.commit();
+                levelSpeedCompter = 0;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
+
+    /**
+     * if we leave the application we have to stop the sensor
+     */
+    @Override
+    protected void onPause() {
+        sensorManager.unregisterListener(this, sensor1);
+        super.onPause();
+    }
+
+    public void calibrateTimeSensors(View view) {
+        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        startTime = System.nanoTime();
+        sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(CalibrageSensorActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

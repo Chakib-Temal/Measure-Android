@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Validate">Lancer </string>
+    <string name="runCalibration">lancer le calibrage </string>
+    <string name="goToCalibrationActivity">aller au calibrage</string>
+
 </resources>
