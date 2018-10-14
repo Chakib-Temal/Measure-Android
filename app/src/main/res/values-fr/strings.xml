@@ -4,4 +4,15 @@
     <string name="runCalibration">lancer le calibrage </string>
     <string name="goToCalibrationActivity">aller au calibrage</string>
 
+    <string name="alert">Reussi</string>
+    <string name="AlertMessage">calibrage reussi</string>
+
+    <string name="warning">Attention</string>
+    <string name="warningMessage">vous devez calibrer avant</string>
+
+    <string name="samplingMode">echantillon</string>
+    <string name="timingMode">seconde</string>
+    <string name="unlimitedMode">illimite</string>
+
+    <string name="introduceValue">Entrer la valeur</string>
 </resources>

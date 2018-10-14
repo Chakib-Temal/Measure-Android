@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,18 +12,25 @@
     <ListView
         android:id="@+id/listSensor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants"
-        android:layout_weight="1"
         tools:ignore="Suspicious0dp"
         />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/sampledInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:hint="enter your value"
+        android:hint="@string/introduceValue"
+        />
+
+    <EditText
+        android:id="@+id/timingInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="@string/introduceValue"
         />
 
     <RadioGroup
@@ -35,20 +42,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="mode 1"
-             />
+            android:text="@string/samplingMode"
+            />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="mode 2" />
+            android:text="@string/timingMode" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="mode 3" />
+            android:text="@string/unlimitedMode" />
     </RadioGroup>
 
     <Button android:id="@+id/gotoCalibrageActivity"
