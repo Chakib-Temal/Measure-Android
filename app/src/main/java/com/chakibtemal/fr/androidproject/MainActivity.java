@@ -9,8 +9,12 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
@@ -25,9 +29,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listSensors = null;
-    private Button buttonRun = null;
     private Button goToCalibrageActivity = null;
-
+    private LinearLayout body = null;
+    private EditText sampledInput = null;
+    private EditText timeInput = null;
+    private RadioGroup choiceModeGroup = null;
+    private Spinner choiceSensorforMode = null;
+    private LinearLayout bodyChild = null;
 
     private SensorManager sensorManager = null;
     private ComplexSensor accelerometer = null;
@@ -42,7 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private BasicSpinnerAdapter adapter;
 
     private long [] resultsOfCalibrage = {0,0,0,0};
-    SharedPreferencesHelper preferences;
+    private SharedPreferencesHelper preferences;
+
+    private long numberOfSample = 0;
+    private long numberOfSecond = 0;
+
+    private List<String> listSpinner = new ArrayList<String>();
+    private ArrayAdapter<String> adaptere;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
          * if it's not calibred, another activity will be called
          */
         this.testCalibrationOfSensors();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -65,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         this.accelerometer = new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER);
         this.gyroscope = new ComplexSensor(sensorManager, Sensor.TYPE_GYROSCOPE);
         this.aproximity = new ComplexSensor(sensorManager, Sensor.TYPE_PROXIMITY);
-        this.buttonRun = (Button) findViewById(R.id.start);
+
 
         /**
          *
@@ -77,11 +90,25 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Adapter for the View
          */
-        adapter = new BasicSpinnerAdapter(availableSensors, itemSpinner, this);
-        listSensors = (ListView) findViewById(R.id.listSensor);
-        listSensors.setAdapter(adapter);
-        goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
+        this.adapter = new BasicSpinnerAdapter(availableSensors, itemSpinner, this);
+        this.listSensors = (ListView) findViewById(R.id.listSensor);
+        this.listSensors.setAdapter(adapter);
 
+        /**
+         * Prepare View And Actions
+         */
+        this.body = (LinearLayout) findViewById(R.id.bodyMainActivity);
+        this.sampledInput = (EditText) findViewById(R.id.sampledInput);
+        this.timeInput = (EditText) findViewById(R.id.timeInput);
+        this.bodyChild = (LinearLayout) findViewById(R.id.bodyChild);
+        this.choiceModeGroup = (RadioGroup) findViewById(R.id.listOfChoicesMode);
+        this.choiceModeGroup.check(R.id.radioSampleMode);
+        this.adaptere = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpinner);
+        this.choiceSensorforMode = (Spinner) findViewById(R.id.spinnerChoiceSensor);
+        this.choiceSensorforMode.setAdapter(adaptere);
+
+        this.goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
+        this.body.removeView(timeInput);
         /**
          * Events on ListView
          */
@@ -97,29 +124,53 @@ public class MainActivity extends AppCompatActivity {
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     actualSensor.setSelected(true);
                     dataForNextActivities.add(actualSensor.getDataOfSensor());
-
-                    /*  changement d'une seule ligne
-                    if (actualSensor.getSensor().getName() == new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER).getSensor().getName()){
-                        TextView  nameSensor = (TextView)view.findViewById(R.id.nameSensor);
-                        nameSensor.setText("change !!!");
-                    }
-                    */
+                    listSpinner.add(actualSensor.getSensor().getName());
+                    adaptere.notifyDataSetChanged();
 
                 }else {
                     view.setBackgroundColor(getResources().getColor(R.color.colorBlank));
                     actualSensor.setSelected(false);
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
+                    listSpinner.remove(actualSensor.getSensor().getName());
+                    adaptere.notifyDataSetChanged();
                 }
             }
         });
 
-
-        goToCalibrageActivity.setOnClickListener(new View.OnClickListener() {
+        this.goToCalibrageActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), CalibrageSensorActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        this.choiceModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if ( i == R.id.radioSampleMode){
+                    body.removeView(timeInput);
+                    body.addView(sampledInput, 1);
+                    try{
+                        bodyChild.addView(choiceSensorforMode);
+                    }catch (Exception e){
+                        e.getStackTrace();
+                    }
+
+                }else if (i == R.id.radioTimeMode){
+                    body.removeView(sampledInput);
+                    body.addView(timeInput, 1);
+                    try{
+                        bodyChild.addView(choiceSensorforMode);
+                    }catch (Exception e){
+                        e.getStackTrace();
+                    }
+                }else {
+                    body.removeView(sampledInput);
+                    body.removeView(timeInput);
+                    bodyChild.removeView(choiceSensorforMode);
+                }
             }
         });
         //end OnCreate(); here you can complete programme
@@ -146,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
      * Events on Button Run
      */
     public void onClickRun(View view) {
+
         Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
@@ -158,6 +210,15 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
         "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
+
+        try{
+            numberOfSample = Long.parseLong(sampledInput.getText().toString());
+            numberOfSecond = Long.parseLong(timeInput.getText().toString());
+        }catch (RuntimeException e){
+            e.getStackTrace();
+        }finally {
+            System.out.println("voici le resultats en long : " + numberOfSample + " // " + numberOfSecond);
+        }
         onResume();
     }
 }

@@ -14,5 +14,6 @@
     <string name="timingMode">seconde</string>
     <string name="unlimitedMode">illimite</string>
 
-    <string name="introduceValue">Entrer la valeur</string>
+    <string name="introduceSampleValue">nombre echantillons</string>
+    <string name="introduceTimeValue">entrer la duree (seconde)</string>
 </resources>
