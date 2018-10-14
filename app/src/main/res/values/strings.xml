@@ -14,5 +14,6 @@
     <string name="timingMode">Time</string>
     <string name="unlimitedMode">Unlimited</string>
 
-    <string name="introduceValue">Enter value</string>
+    <string name="introduceSampleValue">Enter number of Sample</string>
+    <string name="introduceTimeValue">Enter time (second)</string>
 </resources>
