@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> listSpinner = new ArrayList<String>();
     private ArrayAdapter<String> adaptere;
 
+    private String sensorCommand;
+    private String choice = "SAMPLE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /**
@@ -109,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
 
         this.goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
         this.body.removeView(timeInput);
+
         /**
          * Events on ListView
          */
-
         listSensors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -133,10 +136,16 @@ public class MainActivity extends AppCompatActivity {
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
                     listSpinner.remove(actualSensor.getSensor().getName());
                     adaptere.notifyDataSetChanged();
+                    if (listSpinner.isEmpty()){
+                        sensorCommand = null;
+                    }
                 }
             }
         });
 
+        /**
+         * Event for Calibrage Button
+         */
         this.goToCalibrageActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,21 +155,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Event for GroupCheckButton
+         */
         this.choiceModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if ( i == R.id.radioSampleMode){
                     body.removeView(timeInput);
                     body.addView(sampledInput, 1);
+                    choice = "SAMPLE";
                     try{
                         bodyChild.addView(choiceSensorforMode);
                     }catch (Exception e){
                         e.getStackTrace();
                     }
-
                 }else if (i == R.id.radioTimeMode){
                     body.removeView(sampledInput);
                     body.addView(timeInput, 1);
+                    choice = "TIME";
                     try{
                         bodyChild.addView(choiceSensorforMode);
                     }catch (Exception e){
@@ -170,10 +183,59 @@ public class MainActivity extends AppCompatActivity {
                     body.removeView(sampledInput);
                     body.removeView(timeInput);
                     bodyChild.removeView(choiceSensorforMode);
+                    choice = "UNLIMITED";
+                    sensorCommand = null;
+                    numberOfSample = 0;
+                    numberOfSecond = 0;
                 }
             }
         });
+
+        this.choiceSensorforMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sensorCommand = (String) choiceSensorforMode.getSelectedItem();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
         //end OnCreate(); here you can complete programme
+    }
+
+
+
+    /**
+     * Events on Button Run
+     */
+    public void onClickRun(View view) {
+        Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * event for Return Button
+     */
+    @Override
+    public void onBackPressed() {
+        System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
+        "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
+
+        try{
+            numberOfSample = Long.parseLong(sampledInput.getText().toString());
+            numberOfSecond = Long.parseLong(timeInput.getText().toString());
+        }catch (RuntimeException e){
+            e.getStackTrace();
+        }finally {
+            System.out.println("voici le choix qui depend du mode : " + choice +  "/////////" +numberOfSample + " // " + numberOfSecond);
+        }
+
+        System.out.println("Voici le capteur qui va etre prioritaire : " + sensorCommand);
+        onResume();
     }
 
     /**
@@ -191,34 +253,5 @@ public class MainActivity extends AppCompatActivity {
             resultsOfCalibrage[2] = preferences.preferences.getLong("gameMode", 0);
             resultsOfCalibrage[3] = preferences.preferences.getLong("fastestMode", 0);
         }
-    }
-
-    /**
-     * Events on Button Run
-     */
-    public void onClickRun(View view) {
-
-        Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
-        "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
-
-        try{
-            numberOfSample = Long.parseLong(sampledInput.getText().toString());
-            numberOfSecond = Long.parseLong(timeInput.getText().toString());
-        }catch (RuntimeException e){
-            e.getStackTrace();
-        }finally {
-            System.out.println("voici le resultats en long : " + numberOfSample + " // " + numberOfSecond);
-        }
-        onResume();
     }
 }
