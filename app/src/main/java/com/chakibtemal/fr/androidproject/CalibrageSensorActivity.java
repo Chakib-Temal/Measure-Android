@@ -103,16 +103,13 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
             startActivity(intent);
             finish();
         }
-
     }
 
     public void showAlert(int title,int message ){
 
         AlertDialog alertDialog = new AlertDialog.Builder(CalibrageSensorActivity.this).create();
         alertDialog.setTitle(title);
-
         alertDialog.setMessage(getResources().getString(message));
-
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
