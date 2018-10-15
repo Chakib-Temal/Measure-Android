@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Spinner;
@@ -52,14 +53,27 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         View root = inflater.inflate(R.layout.sensor_item, null);
 
         TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
-        ComplexSensor sensor = (ComplexSensor) getItem(position);
+        final ComplexSensor sensor = (ComplexSensor) getItem(position);
         nameSensor.setText(sensor.getSensor().getName());
 
-        Spinner spinner = (Spinner) root.findViewById(R.id.spinner1);
+        final Spinner spinner = (Spinner) root.findViewById(R.id.spinner1);
         ArrayAdapter<Double> adapter = new ArrayAdapter<Double>(mContext, android.R.layout.simple_list_item_1, mSpinnerItems);
         spinner.setAdapter(adapter);
 
         spinner.setFocusable(false);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+               sensor.getDataOfSensor().setFrequency((double) spinner.getSelectedItem());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         return root;
     }

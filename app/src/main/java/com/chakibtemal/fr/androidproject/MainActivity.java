@@ -21,12 +21,13 @@ import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
+import com.chakibtemal.fr.modele.sharedResources.RunMode;
 import com.chakibtemal.fr.modele.validator.ValidatorSensor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private ListView listSensors = null;
     private Button goToCalibrageActivity = null;
@@ -59,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adaptere;
 
     private String sensorCommand;
-    private String choice = "SAMPLE";
+    private String choiceMode ;
+
+    private String saveValueOfCommandSensor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         itemSpinner.add(new Double(0));itemSpinner.add(new Double(1));
         itemSpinner.add(new Double(2));itemSpinner.add(new Double(3));
+        this.choiceMode = getResources().getString(R.string.SAMPLE);
 
         /**
          * Configuration for Sensors
@@ -81,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         this.accelerometer = new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER);
         this.gyroscope = new ComplexSensor(sensorManager, Sensor.TYPE_GYROSCOPE);
         this.aproximity = new ComplexSensor(sensorManager, Sensor.TYPE_PROXIMITY);
-
 
         /**
          *
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ComplexSensor actualSensor = availableSensors.get(i);
                 Spinner frequency = (Spinner) view.findViewById(R.id.spinner1);
+
                 actualSensor.getDataOfSensor().setFrequency( (double) frequency.getSelectedItem());
 
                 if (!actualSensor.isSelected()){
@@ -164,18 +168,20 @@ public class MainActivity extends AppCompatActivity {
                 if ( i == R.id.radioSampleMode){
                     body.removeView(timeInput);
                     body.addView(sampledInput, 1);
-                    choice = "SAMPLE";
+                    choiceMode = getResources().getString(R.string.SAMPLE);
                     try{
                         bodyChild.addView(choiceSensorforMode);
+                        sensorCommand = saveValueOfCommandSensor;
                     }catch (Exception e){
                         e.getStackTrace();
                     }
                 }else if (i == R.id.radioTimeMode){
                     body.removeView(sampledInput);
                     body.addView(timeInput, 1);
-                    choice = "TIME";
+                    choiceMode = getResources().getString(R.string.TIME);
                     try{
                         bodyChild.addView(choiceSensorforMode);
+                        sensorCommand =  saveValueOfCommandSensor ;
                     }catch (Exception e){
                         e.getStackTrace();
                     }
@@ -183,10 +189,11 @@ public class MainActivity extends AppCompatActivity {
                     body.removeView(sampledInput);
                     body.removeView(timeInput);
                     bodyChild.removeView(choiceSensorforMode);
-                    choice = "UNLIMITED";
-                    sensorCommand = null;
+                    choiceMode = getResources().getString(R.string.UNLIMITED);
                     numberOfSample = 0;
                     numberOfSecond = 0;
+                    saveValueOfCommandSensor = sensorCommand;
+                    sensorCommand = null;
                 }
             }
         });
@@ -196,25 +203,17 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 sensorCommand = (String) choiceSensorforMode.getSelectedItem();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
         //end OnCreate(); here you can complete programme
     }
 
-
-
     /**
      * Events on Button Run
      */
     public void onClickRun(View view) {
-        Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        finish();
+        prepareDataAndGoToTheNextActivity();
     }
 
     /**
@@ -231,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         }catch (RuntimeException e){
             e.getStackTrace();
         }finally {
-            System.out.println("voici le choix qui depend du mode : " + choice +  "/////////" +numberOfSample + " // " + numberOfSecond);
+            System.out.println("voici le choix qui depend du mode : " + choiceMode+  "/////////" +numberOfSample + " // " + numberOfSecond);
         }
 
         System.out.println("Voici le capteur qui va etre prioritaire : " + sensorCommand);
@@ -253,5 +252,66 @@ public class MainActivity extends AppCompatActivity {
             resultsOfCalibrage[2] = preferences.preferences.getLong("gameMode", 0);
             resultsOfCalibrage[3] = preferences.preferences.getLong("fastestMode", 0);
         }
+    }
+
+
+    public void prepareDataAndGoToTheNextActivity(){
+        Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
+        intent.putExtras(this.prepareData());
+        startActivity(intent);
+        finish();
+    }
+
+    public Bundle prepareData(){
+        try{
+            numberOfSample = Long.parseLong(sampledInput.getText().toString());
+            numberOfSecond = Long.parseLong(timeInput.getText().toString());
+        }catch (RuntimeException e) {
+            e.getStackTrace();
+        }
+        int frequency = 0 ;
+        for (DataForNextActivity data : dataForNextActivities){
+            if (data.getName() == sensorCommand){
+                System.out.println("XXXXXXXXXXXXXXXXXXX");
+                System.out.println(data.getFrequency());
+                frequency = (int) data.getFrequency();
+                System.out.println(frequency);
+                System.out.println("XXXXXXXXXXXXXXXXXXX");
+            }
+        }
+
+        RunMode configurationForNextActivity = new RunMode(choiceMode,(int) numberOfSample, sensorCommand, frequency );
+        Bundle bundle = new Bundle();
+        long z = 1000000000;
+
+
+        if (choiceMode == getResources().getString(R.string.SAMPLE)){
+            bundle.putParcelable("configuration", configurationForNextActivity);
+        }else if (choiceMode == getResources().getString(R.string.TIME)){
+            if (frequency == SensorManager.SENSOR_DELAY_NORMAL){
+                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+            }else if (frequency == SensorManager.SENSOR_DELAY_UI){
+                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+            }else if (frequency == SensorManager.SENSOR_DELAY_GAME){
+                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+            }else if(frequency == SensorManager.SENSOR_DELAY_FASTEST)  {
+                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+            }
+        }else if (choiceMode == getResources().getString(R.string.UNLIMITED)){
+            bundle.putParcelable("configuration", configurationForNextActivity);
+        }
+
+        bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
+        return bundle;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

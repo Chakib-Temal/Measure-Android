@@ -57,7 +57,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     public void onSensorChanged(SensorEvent sensorEvent) {
         frequecyCompter++;
         if (frequecyCompter == sampleNumber){
-            resultsOfCalibrage[levelSpeedCompter] = (System.nanoTime() - startTime) / sampleNumber;
+            resultsOfCalibrage[levelSpeedCompter] = ((System.nanoTime() - startTime) / sampleNumber);
             sensorManager.unregisterListener(this, sensor1);
             frequecyCompter = 0;
             levelSpeedCompter++;

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
+import com.chakibtemal.fr.modele.sharedResources.RunMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class RunSensorsActivity extends AppCompatActivity {
     protected float [] valuesOfGyroscope = {0, 0, 0};
     protected float [] valuesOfAccelerometer = {0, 0, 0};
     protected float [] valuesOfProximity;
+    private RunMode configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,13 @@ public class RunSensorsActivity extends AppCompatActivity {
          */
         Bundle bundle = getIntent().getExtras();
         this.selectedSensors  = bundle.getParcelableArrayList("data");
+        this.configuration = bundle.getParcelable("configuration");
+        try {
+            System.out.println("voici la configuration choisit : Mode :" + configuration.getNameMode() + " /   " +
+                    configuration.getNameSensorCommand() + " / " + configuration.getNecessaryIndex() + " / " + configuration.getFrequency());
+        }catch (Exception e ){
+            e.getStackTrace();
+        }
 
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
