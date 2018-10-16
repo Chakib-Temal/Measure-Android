@@ -1,8 +1,6 @@
 package com.chakibtemal.fr.androidproject;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,6 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
+import com.chakibtemal.fr.notification.Alert;
 
 public class CalibrageSensorActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -74,7 +73,8 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
                 preference.editor.commit();
                 levelSpeedCompter = 0;
                 body.removeView(progressBar);
-                showAlert(R.string.alert, R.string.AlertMessage );
+                Alert alert  = new Alert(this, R.string.alert, getResources().getString(R.string.AlertMessage));
+                alert.showAlert();
                 body.addView(startButton);
             }
         }
@@ -96,26 +96,13 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     public void onBackPressed() {
         SharedPreferencesHelper preferences  = new SharedPreferencesHelper(this);
         if (!preferences.preferences.getBoolean("alreadyCalibred", false)){
-            showAlert(R.string.warning, R.string.warningMessage );
+            Alert alert  = new Alert(this, R.string.warning, getResources().getString(R.string.warningMessage));
+            alert.showAlert();
             onResume();
         }else {
             Intent intent = new Intent(CalibrageSensorActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
-    }
-
-    public void showAlert(int title,int message ){
-
-        AlertDialog alertDialog = new AlertDialog.Builder(CalibrageSensorActivity.this).create();
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(getResources().getString(message));
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
     }
 }

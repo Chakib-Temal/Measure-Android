@@ -9,6 +9,8 @@ public class ComplexSensor  {
     private boolean isAvailable = false;
     private DataForNextActivity dataOfSensor;
 
+
+
     public ComplexSensor(SensorManager sensorManager, int type){
         this.sensor = sensorManager.getDefaultSensor(type);
         this.dataOfSensor = new DataForNextActivity();

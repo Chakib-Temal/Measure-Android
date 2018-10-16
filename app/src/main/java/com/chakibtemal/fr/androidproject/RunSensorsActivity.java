@@ -60,6 +60,10 @@ public class RunSensorsActivity extends AppCompatActivity {
 
         for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
             this.mySensors.add(new ComplexSensor(sensorManager, actualSimplifiedSensor.getType()));
+            this.mySensors.get(mySensors.size() - 1).getDataOfSensor().setFrequency(actualSimplifiedSensor.getFrequency());
+
+            System.out.println("le capteur  " + actualSimplifiedSensor.getType() +
+                    " et ca frequence est   :" + actualSimplifiedSensor.getFrequency());
         }
 
         adapter = new SensorAdapter(this, 0, this.mySensors);
@@ -80,16 +84,18 @@ public class RunSensorsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Double frequency = new Double(0);
         for (ComplexSensor sensor : this.mySensors){
-            int type =sensor.getSensor().getType();
-
+            frequency = sensor.getDataOfSensor().getFrequency();
+            int type = sensor.getSensor().getType();
             if (type == Sensor.TYPE_ACCELEROMETER){
-                sensorManager.registerListener(acceleroEvenetListner, sensor.getSensor(), (int) sensor.getDataOfSensor().getFrequency());
+                sensorManager.registerListener(acceleroEvenetListner, sensor.getSensor(),  frequency.intValue());
             }else if (type == Sensor.TYPE_GYROSCOPE){
-                sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(), (int) sensor.getDataOfSensor().getFrequency());
+                sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(),  frequency.intValue());
+                System.out.println("Mode speed GYROSCOPE : " + frequency.intValue());
             }else if(type == Sensor.TYPE_PROXIMITY){
-                sensorManager.registerListener(proximityEventListner, sensor.getSensor(), (int) sensor.getDataOfSensor().getFrequency());
+                sensorManager.registerListener(proximityEventListner, sensor.getSensor(), frequency.intValue());
+
             }
         }
     }

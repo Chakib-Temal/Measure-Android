@@ -65,16 +65,11 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
                sensor.getDataOfSensor().setFrequency((double) spinner.getSelectedItem());
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
-
         return root;
     }
 

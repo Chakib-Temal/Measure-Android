@@ -27,7 +27,7 @@ import com.chakibtemal.fr.modele.validator.ValidatorSensor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
 
     private ListView listSensors = null;
     private Button goToCalibrageActivity = null;
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 ComplexSensor actualSensor = availableSensors.get(i);
                 Spinner frequency = (Spinner) view.findViewById(R.id.spinner1);
 
+
                 actualSensor.getDataOfSensor().setFrequency( (double) frequency.getSelectedItem());
 
                 if (!actualSensor.isSelected()){
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     choiceMode = getResources().getString(R.string.SAMPLE);
                     try{
                         bodyChild.addView(choiceSensorforMode);
-                        sensorCommand = saveValueOfCommandSensor;
+                        sensorCommand =  saveValueOfCommandSensor ;
                     }catch (Exception e){
                         e.getStackTrace();
                     }
@@ -223,9 +224,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onBackPressed() {
         System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
         "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
-
         try{
             numberOfSample = Long.parseLong(sampledInput.getText().toString());
+        }catch (RuntimeException e){
+            e.getStackTrace();
+        }
+        try{
             numberOfSecond = Long.parseLong(timeInput.getText().toString());
         }catch (RuntimeException e){
             e.getStackTrace();
@@ -265,38 +269,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public Bundle prepareData(){
         try{
             numberOfSample = Long.parseLong(sampledInput.getText().toString());
-            numberOfSecond = Long.parseLong(timeInput.getText().toString());
         }catch (RuntimeException e) {
             e.getStackTrace();
         }
-        int frequency = 0 ;
-        for (DataForNextActivity data : dataForNextActivities){
-            if (data.getName() == sensorCommand){
-                System.out.println("XXXXXXXXXXXXXXXXXXX");
-                System.out.println(data.getFrequency());
-                frequency = (int) data.getFrequency();
-                System.out.println(frequency);
-                System.out.println("XXXXXXXXXXXXXXXXXXX");
-            }
+
+        try {
+            numberOfSecond = Long.parseLong(timeInput.getText().toString());
+        }catch (Exception e){
+            e.getStackTrace();
         }
 
+        Double frequencyDouble = new Double(0);
+        for (DataForNextActivity data : dataForNextActivities){
+            if (data.getName() == sensorCommand){
+                frequencyDouble =  data.getFrequency();
+            }
+        }
+        int frequency = frequencyDouble.intValue();
+        
         RunMode configurationForNextActivity = new RunMode(choiceMode,(int) numberOfSample, sensorCommand, frequency );
         Bundle bundle = new Bundle();
-        long z = 1000000000;
-
 
         if (choiceMode == getResources().getString(R.string.SAMPLE)){
             bundle.putParcelable("configuration", configurationForNextActivity);
         }else if (choiceMode == getResources().getString(R.string.TIME)){
             if (frequency == SensorManager.SENSOR_DELAY_NORMAL){
-                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 100000) + 1));
             }else if (frequency == SensorManager.SENSOR_DELAY_UI){
-                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[1]) % 100000) + 1));
             }else if (frequency == SensorManager.SENSOR_DELAY_GAME){
-                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[2]) % 100000) + 1));
             }else if(frequency == SensorManager.SENSOR_DELAY_FASTEST)  {
-                configurationForNextActivity.setNecessaryIndex((int) (((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 10));
+                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[3]) % 100000) + 1));
             }
+            bundle.putParcelable("configuration", configurationForNextActivity);
         }else if (choiceMode == getResources().getString(R.string.UNLIMITED)){
             bundle.putParcelable("configuration", configurationForNextActivity);
         }
@@ -305,13 +311,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return bundle;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

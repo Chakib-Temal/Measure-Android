@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AndroidProject</string>
     <string name="Validate">Run </string>
@@ -6,6 +7,7 @@
 
     <string name="alert">Its ok</string>
     <string name="AlertMessage">Calibration finish</string>
+
 
     <string name="warning">warning</string>
     <string name="warningMessage">you should calibrate your app</string>
