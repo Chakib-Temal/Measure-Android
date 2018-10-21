@@ -54,9 +54,7 @@ public class RunSensorsActivity extends AppCompatActivity {
             e.getStackTrace();
         }
 
-
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-
 
         for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
             this.mySensors.add(new ComplexSensor(sensorManager, actualSimplifiedSensor.getType()));
@@ -72,14 +70,6 @@ public class RunSensorsActivity extends AppCompatActivity {
 
 
     }
-    /*
-    public void onClickRun(View view) {
-        for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
-            System.out.println(actualSimplifiedSensor.getName() + " / " + actualSimplifiedSensor.getType());
-        }
-
-    }
-    */
 
     @Override
     protected void onResume() {

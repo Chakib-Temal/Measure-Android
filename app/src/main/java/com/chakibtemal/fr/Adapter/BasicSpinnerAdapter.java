@@ -59,7 +59,6 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         final Spinner spinner = (Spinner) root.findViewById(R.id.spinner1);
         ArrayAdapter<Double> adapter = new ArrayAdapter<Double>(mContext, android.R.layout.simple_list_item_1, mSpinnerItems);
         spinner.setAdapter(adapter);
-
         spinner.setFocusable(false);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

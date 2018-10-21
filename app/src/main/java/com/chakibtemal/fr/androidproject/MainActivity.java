@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity  {
                 ComplexSensor actualSensor = availableSensors.get(i);
                 Spinner frequency = (Spinner) view.findViewById(R.id.spinner1);
 
-
                 actualSensor.getDataOfSensor().setFrequency( (double) frequency.getSelectedItem());
 
                 if (!actualSensor.isSelected()){
@@ -257,7 +256,6 @@ public class MainActivity extends AppCompatActivity  {
             resultsOfCalibrage[3] = preferences.preferences.getLong("fastestMode", 0);
         }
     }
-
 
     public void prepareDataAndGoToTheNextActivity(){
         Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
