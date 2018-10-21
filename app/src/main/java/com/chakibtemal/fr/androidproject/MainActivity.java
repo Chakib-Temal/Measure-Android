@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText sampledInput = null;
     private EditText timeInput = null;
     private RadioGroup choiceModeGroup = null;
-    private Spinner choiceSensorforMode = null;
+
     private LinearLayout bodyChild = null;
 
     private SensorManager sensorManager = null;
@@ -55,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private long numberOfSample = 0;
     private long numberOfSecond = 0;
 
-    private List<String> listSpinner = new ArrayList<String>();
-    private ArrayAdapter<String> adaptere;
-
-    private String sensorCommand;
     private String choice = "SAMPLE";
 
     @Override
@@ -106,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
         this.bodyChild = (LinearLayout) findViewById(R.id.bodyChild);
         this.choiceModeGroup = (RadioGroup) findViewById(R.id.listOfChoicesMode);
         this.choiceModeGroup.check(R.id.radioSampleMode);
-        this.adaptere = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpinner);
-        this.choiceSensorforMode = (Spinner) findViewById(R.id.spinnerChoiceSensor);
-        this.choiceSensorforMode.setAdapter(adaptere);
 
         this.goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
         this.body.removeView(timeInput);
@@ -127,18 +119,11 @@ public class MainActivity extends AppCompatActivity {
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     actualSensor.setSelected(true);
                     dataForNextActivities.add(actualSensor.getDataOfSensor());
-                    listSpinner.add(actualSensor.getSensor().getName());
-                    adaptere.notifyDataSetChanged();
 
                 }else {
                     view.setBackgroundColor(getResources().getColor(R.color.colorBlank));
                     actualSensor.setSelected(false);
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
-                    listSpinner.remove(actualSensor.getSensor().getName());
-                    adaptere.notifyDataSetChanged();
-                    if (listSpinner.isEmpty()){
-                        sensorCommand = null;
-                    }
                 }
             }
         });
@@ -165,41 +150,22 @@ public class MainActivity extends AppCompatActivity {
                     body.removeView(timeInput);
                     body.addView(sampledInput, 1);
                     choice = "SAMPLE";
-                    try{
-                        bodyChild.addView(choiceSensorforMode);
-                    }catch (Exception e){
-                        e.getStackTrace();
-                    }
+
                 }else if (i == R.id.radioTimeMode){
                     body.removeView(sampledInput);
                     body.addView(timeInput, 1);
                     choice = "TIME";
-                    try{
-                        bodyChild.addView(choiceSensorforMode);
-                    }catch (Exception e){
-                        e.getStackTrace();
-                    }
+
                 }else {
                     body.removeView(sampledInput);
                     body.removeView(timeInput);
-                    bodyChild.removeView(choiceSensorforMode);
                     choice = "UNLIMITED";
-                    sensorCommand = null;
                     numberOfSample = 0;
                     numberOfSecond = 0;
                 }
             }
         });
 
-        this.choiceSensorforMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                sensorCommand = (String) choiceSensorforMode.getSelectedItem();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
         //end OnCreate(); here you can complete programme
     }
 
@@ -234,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("voici le choix qui depend du mode : " + choice +  "/////////" +numberOfSample + " // " + numberOfSecond);
         }
 
-        System.out.println("Voici le capteur qui va etre prioritaire : " + sensorCommand);
         onResume();
     }
 
