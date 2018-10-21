@@ -6,16 +6,13 @@ import android.os.Parcelable;
 public class RunMode implements Parcelable {
     private String nameMode;
     private int necessaryIndex;
-    private String nameSensorCommand;
-    private int frequency;
 
 
 
-    public RunMode(String nameMode, int necessaryIndex, String nameSensorCommand, int frequency) {
+
+    public RunMode(String nameMode, int necessaryIndex ) {
         this.nameMode = nameMode;
         this.necessaryIndex = necessaryIndex;
-        this.nameSensorCommand = nameSensorCommand;
-        this.frequency = frequency;
 
     }
 
@@ -35,26 +32,12 @@ public class RunMode implements Parcelable {
         this.necessaryIndex = necessaryIndex;
     }
 
-    public String getNameSensorCommand() {
-        return nameSensorCommand;
-    }
 
-    public void setNameSensorCommand(String nameSensorCommand) {
-        this.nameSensorCommand = nameSensorCommand;
-    }
-    public int getFrequency() {
-        return frequency;
-    }
 
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
-    }
 
     protected RunMode(Parcel in) {
         nameMode = in.readString();
         necessaryIndex = in.readInt();
-        nameSensorCommand = in.readString();
-        frequency = in.readInt();
     }
 
     @Override
@@ -66,8 +49,6 @@ public class RunMode implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nameMode);
         dest.writeInt(necessaryIndex);
-        dest.writeString(nameSensorCommand);
-        dest.writeInt(frequency);
     }
 
     @SuppressWarnings("unused")

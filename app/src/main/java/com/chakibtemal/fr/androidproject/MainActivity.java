@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity  {
     private EditText sampledInput = null;
     private EditText timeInput = null;
     private RadioGroup choiceModeGroup = null;
-    private Spinner choiceSensorforMode = null;
     private LinearLayout bodyChild = null;
 
     private SensorManager sensorManager = null;
@@ -56,13 +54,8 @@ public class MainActivity extends AppCompatActivity  {
     private long numberOfSample = 0;
     private long numberOfSecond = 0;
 
-    private List<String> listSpinner = new ArrayList<String>();
-    private ArrayAdapter<String> adaptere;
-
-    private String sensorCommand;
     private String choiceMode ;
 
-    private String saveValueOfCommandSensor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +102,6 @@ public class MainActivity extends AppCompatActivity  {
         this.bodyChild = (LinearLayout) findViewById(R.id.bodyChild);
         this.choiceModeGroup = (RadioGroup) findViewById(R.id.listOfChoicesMode);
         this.choiceModeGroup.check(R.id.radioSampleMode);
-        this.adaptere = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpinner);
-        this.choiceSensorforMode = (Spinner) findViewById(R.id.spinnerChoiceSensor);
-        this.choiceSensorforMode.setAdapter(adaptere);
 
         this.goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
         this.body.removeView(timeInput);
@@ -124,26 +114,16 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ComplexSensor actualSensor = availableSensors.get(i);
                 Spinner frequency = (Spinner) view.findViewById(R.id.spinner1);
-
-
                 actualSensor.getDataOfSensor().setFrequency( (double) frequency.getSelectedItem());
 
                 if (!actualSensor.isSelected()){
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     actualSensor.setSelected(true);
                     dataForNextActivities.add(actualSensor.getDataOfSensor());
-                    listSpinner.add(actualSensor.getSensor().getName());
-                    adaptere.notifyDataSetChanged();
-
                 }else {
                     view.setBackgroundColor(getResources().getColor(R.color.colorBlank));
                     actualSensor.setSelected(false);
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
-                    listSpinner.remove(actualSensor.getSensor().getName());
-                    adaptere.notifyDataSetChanged();
-                    if (listSpinner.isEmpty()){
-                        sensorCommand = null;
-                    }
                 }
             }
         });
@@ -170,42 +150,18 @@ public class MainActivity extends AppCompatActivity  {
                     body.removeView(timeInput);
                     body.addView(sampledInput, 1);
                     choiceMode = getResources().getString(R.string.SAMPLE);
-                    try{
-                        bodyChild.addView(choiceSensorforMode);
-                        sensorCommand =  saveValueOfCommandSensor ;
-                    }catch (Exception e){
-                        e.getStackTrace();
-                    }
                 }else if (i == R.id.radioTimeMode){
                     body.removeView(sampledInput);
                     body.addView(timeInput, 1);
                     choiceMode = getResources().getString(R.string.TIME);
-                    try{
-                        bodyChild.addView(choiceSensorforMode);
-                        sensorCommand =  saveValueOfCommandSensor ;
-                    }catch (Exception e){
-                        e.getStackTrace();
-                    }
                 }else {
                     body.removeView(sampledInput);
                     body.removeView(timeInput);
-                    bodyChild.removeView(choiceSensorforMode);
                     choiceMode = getResources().getString(R.string.UNLIMITED);
                     numberOfSample = 0;
                     numberOfSecond = 0;
-                    saveValueOfCommandSensor = sensorCommand;
-                    sensorCommand = null;
                 }
             }
-        });
-
-        this.choiceSensorforMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                sensorCommand = (String) choiceSensorforMode.getSelectedItem();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
         //end OnCreate(); here you can complete programme
     }
@@ -222,22 +178,6 @@ public class MainActivity extends AppCompatActivity  {
      */
     @Override
     public void onBackPressed() {
-        System.out.println("Temps d'exécution par echantillon  mode Normal :" + resultsOfCalibrage[0] + "// mode UI: " + resultsOfCalibrage[1] +
-        "// mode Game :  " + resultsOfCalibrage[2] + "// mode Fastest : " + resultsOfCalibrage[3] );
-        try{
-            numberOfSample = Long.parseLong(sampledInput.getText().toString());
-        }catch (RuntimeException e){
-            e.getStackTrace();
-        }
-        try{
-            numberOfSecond = Long.parseLong(timeInput.getText().toString());
-        }catch (RuntimeException e){
-            e.getStackTrace();
-        }finally {
-            System.out.println("voici le choix qui depend du mode : " + choiceMode+  "/////////" +numberOfSample + " // " + numberOfSecond);
-        }
-
-        System.out.println("Voici le capteur qui va etre prioritaire : " + sensorCommand);
         onResume();
     }
 
@@ -258,12 +198,18 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-
     public void prepareDataAndGoToTheNextActivity(){
         Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
         intent.putExtras(this.prepareData());
-        startActivity(intent);
-        finish();
+
+        if (choiceMode == getResources().getString(R.string.SAMPLE) && numberOfSample == new Long(0)){
+            return;
+        }else if (choiceMode == getResources().getString(R.string.TIME) && numberOfSecond == new Long(0)){
+            return;
+        }else {
+            startActivity(intent);
+            finish();
+        }
     }
 
     public Bundle prepareData(){
@@ -280,30 +226,39 @@ public class MainActivity extends AppCompatActivity  {
         }
 
         Double frequencyDouble = new Double(0);
-        for (DataForNextActivity data : dataForNextActivities){
-            if (data.getName() == sensorCommand){
-                frequencyDouble =  data.getFrequency();
-            }
-        }
         int frequency = frequencyDouble.intValue();
-        
-        RunMode configurationForNextActivity = new RunMode(choiceMode,(int) numberOfSample, sensorCommand, frequency );
+        int fr = frequencyDouble.intValue();
+
         Bundle bundle = new Bundle();
 
         if (choiceMode == getResources().getString(R.string.SAMPLE)){
+            RunMode configurationForNextActivity = new RunMode(choiceMode,(int) numberOfSample );
             bundle.putParcelable("configuration", configurationForNextActivity);
-        }else if (choiceMode == getResources().getString(R.string.TIME)){
-            if (frequency == SensorManager.SENSOR_DELAY_NORMAL){
-                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[0]) % 100000) + 1));
-            }else if (frequency == SensorManager.SENSOR_DELAY_UI){
-                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[1]) % 100000) + 1));
-            }else if (frequency == SensorManager.SENSOR_DELAY_GAME){
-                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[2]) % 100000) + 1));
-            }else if(frequency == SensorManager.SENSOR_DELAY_FASTEST)  {
-                configurationForNextActivity.setNecessaryIndex((int) ((((numberOfSecond*1000000000)/ resultsOfCalibrage[3]) % 100000) + 1));
+
+        }else if (choiceMode == getResources().getString(R.string.TIME)) {
+
+            for (int i = 0; i < dataForNextActivities.size(); i++) {
+
+                if (dataForNextActivities.get(i).getFrequency() == SensorManager.SENSOR_DELAY_NORMAL) {
+                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[0]) % 100000) + 1));
+                } else if (dataForNextActivities.get(i).getFrequency() == SensorManager.SENSOR_DELAY_UI) {
+                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[1]) % 100000) + 1));
+                } else if (dataForNextActivities.get(i).getFrequency() ==  SensorManager.SENSOR_DELAY_GAME) {
+                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[2]) % 100000) + 1));
+                } else if (dataForNextActivities.get(i).getFrequency() ==  SensorManager.SENSOR_DELAY_FASTEST) {
+                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[3]) % 100000) + 1));
+                }
+
+                // to take greatest value of frequency
+                if (fr > frequency){
+                    frequency = fr;
+                }
             }
+            RunMode configurationForNextActivity = new RunMode(choiceMode, frequency );
             bundle.putParcelable("configuration", configurationForNextActivity);
+
         }else if (choiceMode == getResources().getString(R.string.UNLIMITED)){
+            RunMode configurationForNextActivity = new RunMode(choiceMode,(int) 0 );
             bundle.putParcelable("configuration", configurationForNextActivity);
         }
 

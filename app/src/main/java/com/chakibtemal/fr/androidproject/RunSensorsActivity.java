@@ -49,7 +49,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         this.configuration = bundle.getParcelable("configuration");
         try {
             System.out.println("voici la configuration choisit : Mode :" + configuration.getNameMode() + " /   " +
-                    configuration.getNameSensorCommand() + " / " + configuration.getNecessaryIndex() + " / " + configuration.getFrequency());
+                    " et l'index necessaire est  " + configuration.getNecessaryIndex() + " / ");
         }catch (Exception e ){
             e.getStackTrace();
         }
@@ -62,7 +62,7 @@ public class RunSensorsActivity extends AppCompatActivity {
             this.mySensors.add(new ComplexSensor(sensorManager, actualSimplifiedSensor.getType()));
             this.mySensors.get(mySensors.size() - 1).getDataOfSensor().setFrequency(actualSimplifiedSensor.getFrequency());
 
-            System.out.println("le capteur  " + actualSimplifiedSensor.getType() +
+            System.out.println("le capteur  " + actualSimplifiedSensor.getName() +
                     " et ca frequence est   :" + actualSimplifiedSensor.getFrequency());
         }
 
@@ -72,14 +72,9 @@ public class RunSensorsActivity extends AppCompatActivity {
 
 
     }
-    /*
-    public void onClickRun(View view) {
-        for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
-            System.out.println(actualSimplifiedSensor.getName() + " / " + actualSimplifiedSensor.getType());
-        }
 
-    }
-    */
+
+
 
     @Override
     protected void onResume() {
