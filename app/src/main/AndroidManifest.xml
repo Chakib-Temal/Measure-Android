@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RunSensorsActivity" />
-        <activity android:name=".CalibrageSensorActivity"></activity>
+        <activity android:name=".CalibrageSensorActivity" />
     </application>
 
 </manifest>

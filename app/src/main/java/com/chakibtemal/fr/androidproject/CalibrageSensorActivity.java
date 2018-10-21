@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
-import com.chakibtemal.fr.notification.Alert;
+import com.chakibtemal.fr.modele.notification.Alert;
 
 public class CalibrageSensorActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -47,7 +47,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     public void calibrateTimeSensors(View view) {
         body.removeView(startButton);
         body.addView(progressBar);
-        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY );
         startTime = System.nanoTime();
         sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
     }

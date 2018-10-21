@@ -16,4 +16,7 @@
 
     <string name="introduceSampleValue">nombre echantillons</string>
     <string name="introduceTimeValue">entrer la duree (seconde)</string>
+
+    <string name="stop">arreter</string>
+    <string name="save">sauvegarder</string>
 </resources>

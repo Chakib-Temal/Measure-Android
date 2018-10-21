@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         onResume();
+        System.out.println("mode normal : " + resultsOfCalibrage[0] +" //mode ui : " + resultsOfCalibrage[1] +" //mode game :" + resultsOfCalibrage[2] +" //mode fast : " + resultsOfCalibrage[3] );
     }
 
     /**
@@ -226,13 +227,13 @@ public class MainActivity extends AppCompatActivity  {
         }
 
         Double frequencyDouble = new Double(0);
-        int frequency = frequencyDouble.intValue();
-        int fr = frequencyDouble.intValue();
+        int indexfrequency = frequencyDouble.intValue();
+        int indexfr = frequencyDouble.intValue();
 
         Bundle bundle = new Bundle();
 
         if (choiceMode == getResources().getString(R.string.SAMPLE)){
-            RunMode configurationForNextActivity = new RunMode(choiceMode,(int) numberOfSample );
+            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.SAMPLE),(int) numberOfSample );
             bundle.putParcelable("configuration", configurationForNextActivity);
 
         }else if (choiceMode == getResources().getString(R.string.TIME)) {
@@ -240,25 +241,25 @@ public class MainActivity extends AppCompatActivity  {
             for (int i = 0; i < dataForNextActivities.size(); i++) {
 
                 if (dataForNextActivities.get(i).getFrequency() == SensorManager.SENSOR_DELAY_NORMAL) {
-                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[0]) % 100000) + 1));
+                    indexfr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[0]) % 100000) + 1));
                 } else if (dataForNextActivities.get(i).getFrequency() == SensorManager.SENSOR_DELAY_UI) {
-                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[1]) % 100000) + 1));
+                    indexfr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[1]) % 100000) + 1));
                 } else if (dataForNextActivities.get(i).getFrequency() ==  SensorManager.SENSOR_DELAY_GAME) {
-                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[2]) % 100000) + 1));
+                    indexfr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[2]) % 100000) + 1));
                 } else if (dataForNextActivities.get(i).getFrequency() ==  SensorManager.SENSOR_DELAY_FASTEST) {
-                    fr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[3]) % 100000) + 1));
+                    indexfr = ((int) ((((numberOfSecond * 1000000000) / resultsOfCalibrage[3]) % 100000) + 1));
                 }
 
                 // to take greatest value of frequency
-                if (fr > frequency){
-                    frequency = fr;
+                if (indexfr > indexfrequency){
+                    indexfrequency = indexfr;
                 }
             }
-            RunMode configurationForNextActivity = new RunMode(choiceMode, frequency );
+            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.TIME), indexfrequency );
             bundle.putParcelable("configuration", configurationForNextActivity);
 
         }else if (choiceMode == getResources().getString(R.string.UNLIMITED)){
-            RunMode configurationForNextActivity = new RunMode(choiceMode,(int) 0 );
+            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.UNLIMITED),(int) 0 );
             bundle.putParcelable("configuration", configurationForNextActivity);
         }
 

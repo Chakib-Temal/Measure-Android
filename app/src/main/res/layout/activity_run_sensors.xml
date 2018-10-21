@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RunSensorsActivity">
+    tools:context=".RunSensorsActivity"
+    android:orientation="vertical"
+    android:id="@+id/body">
 
     <ListView
         android:id="@+id/listWorkSensors"
@@ -15,4 +17,18 @@
         tools:ignore="Suspicious0dp"
         />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/stopRuning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/stop"
+        android:onClick="onClickStopRuning"
+         />
+
+    <Button
+        android:id="@+id/saveInBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save" />
+
+</LinearLayout>

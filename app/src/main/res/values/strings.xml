@@ -18,4 +18,7 @@
 
     <string name="introduceSampleValue">Enter number of Sample</string>
     <string name="introduceTimeValue">Enter time (second)</string>
+
+    <string name="stop">stop</string>
+    <string name="save">save</string>
 </resources>

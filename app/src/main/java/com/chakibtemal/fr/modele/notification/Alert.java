@@ -1,4 +1,4 @@
-package com.chakibtemal.fr.notification;
+package com.chakibtemal.fr.modele.notification;
 
 import android.app.AlertDialog;
 import android.content.Context;
