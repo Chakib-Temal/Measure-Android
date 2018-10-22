@@ -21,4 +21,9 @@
 
     <string name="stop">stop</string>
     <string name="save">save</string>
+
+    <string name="ACCELEROMETER">Accelerometer</string>
+    <string name="GYROSCOPE">Gyroscope</string>
+    <string name="PROXIMITY">Proximity</string>
+
 </resources>

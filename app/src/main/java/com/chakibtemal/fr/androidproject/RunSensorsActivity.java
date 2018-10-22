@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chakibtemal.fr.modele.sqliteDb.Solar;
+import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
 import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
@@ -37,7 +39,7 @@ public class RunSensorsActivity extends AppCompatActivity {
 
     protected float [] valuesOfGyroscope = {0, 0, 0};
     protected float [] valuesOfAccelerometer = {0, 0, 0};
-    protected float [] valuesOfProximity;
+    protected float [] valuesOfProximity = {0, 0, 0};
     private RunMode configuration;
 
     private String runMode ="";
@@ -139,7 +141,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            accelerometerValues[compterIndexAccelerometer] = new ValueOfSensor(sensorEvent.values) ;
+            accelerometerValues[compterIndexAccelerometer] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
             valuesOfAccelerometer = sensorEvent.values;
             adapter.notifyDataSetChanged();
             if(compterIndexAccelerometer == (necessaryIndex - 1)){
@@ -153,7 +155,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            gyroscopeValues[compterIndexGyroscope] = new ValueOfSensor(sensorEvent.values);
+            gyroscopeValues[compterIndexGyroscope] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp);
             valuesOfGyroscope = sensorEvent.values;
             adapter.notifyDataSetChanged();
             if(compterIndexGyroscope == (necessaryIndex - 1)){
@@ -167,7 +169,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            proximityValues[compterIndexProximity] = new ValueOfSensor(sensorEvent.values);
+            proximityValues[compterIndexProximity] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp);
             valuesOfProximity = sensorEvent.values;
             adapter.notifyDataSetChanged();
             if(compterIndexProximity == (necessaryIndex - 1)){
@@ -214,6 +216,7 @@ public class RunSensorsActivity extends AppCompatActivity {
                 valueX.setText(String.valueOf(valuesOfGyroscope[0]));
                 valueY.setText(String.valueOf(valuesOfGyroscope[1]));
                 valueZ.setText(String.valueOf(valuesOfGyroscope[2]));
+
             }else if(type == Sensor.TYPE_PROXIMITY) {
                 nameSensor.setText(sensor.getSensor().getName());
                 valueX.setText(String.valueOf(valuesOfProximity[0]));
@@ -229,6 +232,11 @@ public class RunSensorsActivity extends AppCompatActivity {
         Intent intent = new Intent(RunSensorsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+
+    public void onClickSaveButton(View view) {
+        this.saveData(new SolarBdd(this));
     }
 
     public void stopSensors(){
@@ -247,7 +255,47 @@ public class RunSensorsActivity extends AppCompatActivity {
         }catch (Exception e){
             e.getStackTrace();
         }
-        System.out.println("compteur accelero : " + compterIndexAccelerometer + " /// gyro : " + compterIndexGyroscope + " /// proximity : " + compterIndexProximity);
+       // System.out.println("compteur accelero : " + compterIndexAccelerometer + " : " + accelerometerValues.length + " /// gyro : " + compterIndexGyroscope +  " : " + gyroscopeValues.length + " /// proximity : " + compterIndexProximity+ " : " + proximityValues.length );
     }
 
+
+    public void saveData(SolarBdd sensorBdd){
+        Solar solar = new Solar();
+        sensorBdd.open();
+
+        if (accelerometerValues != null){
+            for (int i=0 ; i < compterIndexAccelerometer ; i++){
+                solar.setName(getResources().getString(R.string.ACCELEROMETER));
+                solar.setValueX(accelerometerValues[i].getValues()[0]);
+                solar.setValueY(accelerometerValues[i].getValues()[1]);
+                solar.setValueZ(accelerometerValues[i].getValues()[2]);
+                solar.setTime(accelerometerValues[i].getTime());
+                sensorBdd.insertLivre(solar);
+            }
+        }
+
+        if (valuesOfGyroscope != null){
+            for (int i=0 ; i < compterIndexGyroscope; i++){
+                solar.setName(getResources().getString(R.string.GYROSCOPE));
+                solar.setValueX(gyroscopeValues[i].getValues()[0]);
+                solar.setValueY(gyroscopeValues[i].getValues()[1]);
+                solar.setValueZ(gyroscopeValues[i].getValues()[2]);
+                solar.setTime(gyroscopeValues[i].getTime());
+                sensorBdd.insertLivre(solar);
+            }
+        }
+
+        if (valuesOfProximity != null){
+            for (int i=0 ; i < compterIndexProximity ; i++){
+                solar.setName(getResources().getString(R.string.PROXIMITY));
+                solar.setValueX(5);
+                solar.setValueX(proximityValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(proximityValues[i].getTime());
+                sensorBdd.insertLivre(solar);
+            }
+        }
+        sensorBdd.close();
+    }
 }

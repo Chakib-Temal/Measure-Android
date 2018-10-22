@@ -48,8 +48,8 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
         body.removeView(startButton);
         body.addView(progressBar);
         this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY );
-        startTime = System.nanoTime();
         sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
+        startTime = System.nanoTime();
     }
 
     @Override
@@ -60,9 +60,9 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
             sensorManager.unregisterListener(this, sensor1);
             frequecyCompter = 0;
             levelSpeedCompter++;
-            startTime = System.nanoTime();
             if (levelSpeedCompter <= 3){
                 sensorManager.registerListener(this, sensor1 , inverseModeSpeed[levelSpeedCompter], 10000000 );
+                startTime = System.nanoTime();
             }
             if (levelSpeedCompter == 4){
                 preference.editor.putBoolean("alreadyCalibred", true);
