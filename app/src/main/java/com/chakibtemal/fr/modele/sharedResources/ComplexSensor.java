@@ -13,10 +13,11 @@ public class ComplexSensor  {
 
     public ComplexSensor(SensorManager sensorManager, int type){
         this.sensor = sensorManager.getDefaultSensor(type);
-        this.dataOfSensor = new DataForNextActivity();
-        this.dataOfSensor.setName(this.sensor.getName());
-        this.dataOfSensor.setType(this.sensor.getType());
-
+        if (this.sensor != null){
+            this.dataOfSensor = new DataForNextActivity();
+            this.dataOfSensor.setName(this.sensor.getName());
+            this.dataOfSensor.setType(this.sensor.getType());
+        }
     }
 
     public DataForNextActivity getDataOfSensor() {

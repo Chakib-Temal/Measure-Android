@@ -11,10 +11,12 @@ public class ValidatorSensor {
             accelerometer.setAvailable(true);
             mySensors.add(accelerometer);
         }
+
         if (gyroscope.getSensor() != null) {
             gyroscope.setAvailable(true);
             mySensors.add(gyroscope);
         }
+
         if (aproximity.getSensor() != null){
             aproximity.setAvailable(true);
             mySensors.add(aproximity);

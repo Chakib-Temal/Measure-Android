@@ -236,7 +236,14 @@ public class RunSensorsActivity extends AppCompatActivity {
 
 
     public void onClickSaveButton(View view) {
-        this.saveData(new SolarBdd(this));
+        final Context context = getApplicationContext();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveData(new SolarBdd(context));
+            }
+        }).start();
+
     }
 
     public void stopSensors(){

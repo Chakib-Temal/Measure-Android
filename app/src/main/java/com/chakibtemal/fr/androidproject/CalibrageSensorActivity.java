@@ -23,7 +23,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     private long [] resultsOfCalibrage = {0,0,0,0};
     private int frequecyCompter = 0;
     private Sensor sensor1;
-    private int sampleNumber = 4;
+    private int sampleNumber = 10;
     private long startTime ;
     private SensorManager sensorManager = null;
     private SharedPreferencesHelper preference;
@@ -47,7 +47,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
     public void calibrateTimeSensors(View view) {
         body.removeView(startButton);
         body.addView(progressBar);
-        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY );
+        this.sensor1 = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
         sensorManager.registerListener(this, sensor1 , SensorManager.SENSOR_DELAY_NORMAL, 100000000 );
         startTime = System.nanoTime();
     }
@@ -61,7 +61,7 @@ public class CalibrageSensorActivity extends AppCompatActivity implements Sensor
             frequecyCompter = 0;
             levelSpeedCompter++;
             if (levelSpeedCompter <= 3){
-                sensorManager.registerListener(this, sensor1 , inverseModeSpeed[levelSpeedCompter], 10000000 );
+                sensorManager.registerListener(this, sensor1 , inverseModeSpeed[levelSpeedCompter], 100000000 );
                 startTime = System.nanoTime();
             }
             if (levelSpeedCompter == 4){
