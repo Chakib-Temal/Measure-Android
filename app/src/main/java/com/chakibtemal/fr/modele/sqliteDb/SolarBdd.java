@@ -47,7 +47,7 @@ public class SolarBdd {
     public SQLiteDatabase getBdd(){
         return bdd;
     }
-    public void insertLivre(Solar sensor){
+    public void insertActualSensor(Solar sensor){
         ContentValues values = new ContentValues();
         values.put(COL_NAME, sensor.getName());
         values.put(COL_VALUEX, sensor.getValueX());

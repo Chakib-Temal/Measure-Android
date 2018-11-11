@@ -207,21 +207,22 @@ public class RunSensorsActivity extends AppCompatActivity {
             int type = sensor.getSensor().getType();
 
             if (type == Sensor.TYPE_ACCELEROMETER){
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf(valuesOfAccelerometer[0]));
-                valueY.setText(String.valueOf(valuesOfAccelerometer[1]));
-                valueZ.setText(String.valueOf(valuesOfAccelerometer[2]));
+                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X : " + valuesOfAccelerometer[0]));
+                valueY.setText(String.valueOf("Y : " + valuesOfAccelerometer[1]));
+                valueZ.setText(String.valueOf("Z : " + valuesOfAccelerometer[2]));
             } else if (type == Sensor.TYPE_GYROSCOPE){
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf(valuesOfGyroscope[0]));
-                valueY.setText(String.valueOf(valuesOfGyroscope[1]));
-                valueZ.setText(String.valueOf(valuesOfGyroscope[2]));
+                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X : " + valuesOfGyroscope[0]));
+                valueY.setText(String.valueOf("Y : " + valuesOfGyroscope[1]));
+                valueZ.setText(String.valueOf("Z : " + valuesOfGyroscope[2]));
 
             }else if(type == Sensor.TYPE_PROXIMITY) {
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf(valuesOfProximity[0]));
-                //valueY.setText(String.valueOf(valuesOfProximity[1]));
-                //valueZ.setText(String.valueOf(valuesOfProximity[2]));
+                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X : " +valuesOfProximity[0]));
+                valueY.setText(String.valueOf("Y : 0" ));
+                valueZ.setText(String.valueOf("Z : 0" ));
+
             }
             return root;
         }
@@ -243,7 +244,6 @@ public class RunSensorsActivity extends AppCompatActivity {
                 saveData(new SolarBdd(context));
             }
         }).start();
-
     }
 
     public void stopSensors(){
@@ -277,7 +277,7 @@ public class RunSensorsActivity extends AppCompatActivity {
                 solar.setValueY(accelerometerValues[i].getValues()[1]);
                 solar.setValueZ(accelerometerValues[i].getValues()[2]);
                 solar.setTime(accelerometerValues[i].getTime());
-                sensorBdd.insertLivre(solar);
+                sensorBdd.insertActualSensor(solar);
             }
         }
 
@@ -288,19 +288,18 @@ public class RunSensorsActivity extends AppCompatActivity {
                 solar.setValueY(gyroscopeValues[i].getValues()[1]);
                 solar.setValueZ(gyroscopeValues[i].getValues()[2]);
                 solar.setTime(gyroscopeValues[i].getTime());
-                sensorBdd.insertLivre(solar);
+                sensorBdd.insertActualSensor(solar);
             }
         }
 
         if (valuesOfProximity != null){
             for (int i=0 ; i < compterIndexProximity ; i++){
                 solar.setName(getResources().getString(R.string.PROXIMITY));
-                solar.setValueX(5);
                 solar.setValueX(proximityValues[i].getValues()[0]);
                 solar.setValueY(0);
                 solar.setValueZ(0);
                 solar.setTime(proximityValues[i].getTime());
-                sensorBdd.insertLivre(solar);
+                sensorBdd.insertActualSensor(solar);
             }
         }
         sensorBdd.close();
