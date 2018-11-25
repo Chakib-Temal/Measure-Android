@@ -4,6 +4,7 @@
     <string name="Validate">Run </string>
     <string name="runCalibration">Start Calibration </string>
     <string name="goToCalibrationActivity">go calibrate sensor</string>
+    <string name="goToModeleActivity">Models</string>
 
     <string name="alert">Its ok</string>
     <string name="AlertMessage">Calibration finish</string>
@@ -25,5 +26,6 @@
     <string name="ACCELEROMETER">Accelerometer</string>
     <string name="GYROSCOPE">Gyroscope</string>
     <string name="PROXIMITY">Proximity</string>
+    <string name="title_activity_modele_run">ModeleRunActivity</string>
 
 </resources>

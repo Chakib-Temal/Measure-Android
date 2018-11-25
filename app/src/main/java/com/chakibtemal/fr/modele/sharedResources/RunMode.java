@@ -7,8 +7,9 @@ public class RunMode implements Parcelable {
     private String nameMode;
     private int necessaryIndex;
 
+    public RunMode(){
 
-
+    }
 
     public RunMode(String nameMode, int necessaryIndex ) {
         this.nameMode = nameMode;

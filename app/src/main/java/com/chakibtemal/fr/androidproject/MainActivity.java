@@ -18,9 +18,12 @@ import android.widget.Spinner;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
+import com.chakibtemal.fr.modele.sharedResources.AllDataForRunActivity;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 import com.chakibtemal.fr.modele.sharedResources.RunMode;
+import com.chakibtemal.fr.modele.sqliteDb.ModelsRuning.DataForNextActivityBdd;
+import com.chakibtemal.fr.modele.sqliteDb.ModelsRuning.RunModeBdd;
 import com.chakibtemal.fr.modele.validator.ValidatorSensor;
 
 import java.util.ArrayList;
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         onResume();
-        System.out.println("mode normal : " + resultsOfCalibrage[0] +" //mode ui : " + resultsOfCalibrage[1] +" //mode game :" + resultsOfCalibrage[2] +" //mode fast : " + resultsOfCalibrage[3] );
+        System.out.println("Temps d'exécution par échantillon mode normal : " + resultsOfCalibrage[1] +" //mode ui : " + resultsOfCalibrage[0] +" //mode game :" + resultsOfCalibrage[2] +" //mode fast : " + resultsOfCalibrage[3] );
     }
 
     /**
@@ -231,9 +234,10 @@ public class MainActivity extends AppCompatActivity  {
         int indexfr = frequencyDouble.intValue();
 
         Bundle bundle = new Bundle();
+        RunMode configurationForNextActivity = new RunMode();
 
         if (choiceMode == getResources().getString(R.string.SAMPLE)){
-            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.SAMPLE),(int) numberOfSample );
+            configurationForNextActivity = new RunMode(getResources().getString(R.string.SAMPLE),(int) numberOfSample );
             bundle.putParcelable("configuration", configurationForNextActivity);
 
         }else if (choiceMode == getResources().getString(R.string.TIME)) {
@@ -255,16 +259,37 @@ public class MainActivity extends AppCompatActivity  {
                     indexfrequency = indexfr;
                 }
             }
-            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.TIME), indexfrequency );
+            configurationForNextActivity = new RunMode(getResources().getString(R.string.TIME), indexfrequency );
             bundle.putParcelable("configuration", configurationForNextActivity);
 
         }else if (choiceMode == getResources().getString(R.string.UNLIMITED)){
-            RunMode configurationForNextActivity = new RunMode(getResources().getString(R.string.UNLIMITED),(int) 0 );
+            configurationForNextActivity = new RunMode(getResources().getString(R.string.UNLIMITED),(int) 0 );
             bundle.putParcelable("configuration", configurationForNextActivity);
         }
 
+        //save modele
+
+        RunModeBdd runModeBdd = new RunModeBdd(this);
+        DataForNextActivityBdd dataForNextActivityBdd = new DataForNextActivityBdd(this);
+        runModeBdd.open();
+        long id = runModeBdd.insertSingleModeRun(configurationForNextActivity);
+        runModeBdd.close();
+        dataForNextActivityBdd.open();
+        AllDataForRunActivity allDataForRunActivity = new AllDataForRunActivity();
+        allDataForRunActivity.setDataForNextActivities(dataForNextActivities);
+        dataForNextActivityBdd.insertActualSensor(allDataForRunActivity, (int) id);
+        dataForNextActivityBdd.close();
+
+
+
         bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
+
         return bundle;
     }
 
+    public void onClickModele(View view) {
+        Intent intent = new Intent(MainActivity.this, ModeleRunActivity.class);
+        startActivity(intent);
+
+    }
 }

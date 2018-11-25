@@ -9,6 +9,7 @@ public class DataForNextActivity implements Parcelable {
     private String name ;
     private int type;
 
+
     public DataForNextActivity(){
         frequency =  SensorManager.SENSOR_DELAY_NORMAL;
         name = " ";

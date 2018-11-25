@@ -84,6 +84,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
+            <Button android:id="@+id/goToModeleActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/goToModeleActivity"
+                android:onClick="onClickModele"
+                android:textColor="@color/colorPrimaryDark"
+                />
 
             <Button android:id="@+id/gotoCalibrageActivity"
                 android:layout_width="match_parent"
