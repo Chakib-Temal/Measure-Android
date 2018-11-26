@@ -31,4 +31,13 @@ public class AllDataForRunActivity  {
     public void setRunMode(RunMode runMode) {
         this.runMode = runMode;
     }
+
+    @Override
+    public String toString() {
+        String sensor = "";
+        for (DataForNextActivity data : this.dataForNextActivities){
+            sensor += data.getName() + " / " + data.getFrequency() + "/ " + data.getType();
+        }
+        return sensor;
+    }
 }

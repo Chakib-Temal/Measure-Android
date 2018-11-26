@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.chakibtemal.fr.androidproject.R;
 import com.chakibtemal.fr.modele.sharedResources.AllDataForRunActivity;
+import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +48,19 @@ public class ModelsAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(R.layout.models_item, null);
 
-        TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
-        AllDataForRunActivity allDataForRunActivity = (AllDataForRunActivity) getItem(position);
-        nameSensor.setText(allDataForRunActivity.getRunMode().getNameMode());
+        TextView nameMode = (TextView) root.findViewById(R.id.nameMode);
+        TextView necessaryIndex = (TextView) root.findViewById(R.id.necessaryIndex);
+        TextView listSensorOfActualModel = (TextView) root.findViewById(R.id.listSensorOfActualModel);
 
+        AllDataForRunActivity allDataForRunActivity = (AllDataForRunActivity) getItem(position);
+        nameMode.setText(allDataForRunActivity.getRunMode().getNameMode());
+        necessaryIndex.setText(Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
+
+        String sensorName = "";
+        for (DataForNextActivity data : allDataForRunActivity.getDataForNextActivities() ){
+            sensorName += data.getName() + ", " + data.getFrequency() + ", " + data.getType() + " || ";
+        }
+        listSensorOfActualModel.setText(sensorName);
 
         return root;
     }

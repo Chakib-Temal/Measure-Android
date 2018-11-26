@@ -2,11 +2,16 @@ package com.chakibtemal.fr.modele.sqliteDb.ModelsRuning;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.chakibtemal.fr.modele.sharedResources.AllDataForRunActivity;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
+import com.chakibtemal.fr.modele.sharedResources.DataModels;
 import com.chakibtemal.fr.modele.sqliteDb.DatabaseHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataForNextActivityBdd {
 
@@ -59,4 +64,41 @@ public class DataForNextActivityBdd {
             this.bdd.insert(TABLE_SOLAR, null, values);
         }
     }
+
+
+    public List<DataModels> getAllDatas(RunModeBdd runModeBdd){
+        List<DataModels> data = new ArrayList<DataModels>();
+
+        Cursor cursor = bdd.rawQuery("SELECT name, type, frequency, id_run_mode , nameMode, necessaryIndex FROM Sensors INNER JOIN RunMode ON id_run_mode = RunMode.id" , null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            DataModels data1 = (DataModels) cursorToSensors(cursor, runModeBdd);
+            data.add(data1);
+            cursor.moveToNext();
+        }
+        return data;
+
+    }
+
+    private DataModels cursorToSensors(Cursor cursor, RunModeBdd runModeBdd) {
+        DataModels actualData = new DataModels();
+
+        actualData.setName(cursor.getString(0));
+        actualData.setType(cursor.getInt(1));
+        actualData.setFrequency(cursor.getDouble(2));
+        actualData.setId_runMode(cursor.getInt(3));
+
+        Cursor c = bdd.rawQuery("SELECT nameMode, necessaryIndex FROM RunMode WHERE id = ? " , new String[]{Integer.toString(actualData.getId_runMode())});
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            actualData.setNameMode(c.getString(0));
+            actualData.setNecessaryIndex(c.getInt(1));
+            c.moveToNext();
+        }
+
+        return actualData;
+    }
+
+
 }

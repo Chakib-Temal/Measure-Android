@@ -8,17 +8,28 @@ public class DataForNextActivity implements Parcelable {
     private double frequency ;
     private String name ;
     private int type;
+    private int id_runMode;
 
 
     public DataForNextActivity(){
         frequency =  SensorManager.SENSOR_DELAY_NORMAL;
         name = " ";
         type = 0;
+        this.id_runMode = 0;
     }
     public DataForNextActivity(Parcel in) {
        frequency =  in.readDouble();
        name = in.readString();
        type = in.readInt();
+       id_runMode = in.readInt();
+    }
+
+    public int getId_runMode() {
+        return id_runMode;
+    }
+
+    public void setId_runMode(int id_runMode) {
+        this.id_runMode = id_runMode;
     }
 
     public int getType() {
@@ -45,7 +56,16 @@ public class DataForNextActivity implements Parcelable {
         this.name = name;
     }
 
-    
+    @Override
+    public String toString() {
+        return "DataForNextActivity{" +
+                "frequency=" + frequency +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", id_runMode=" + id_runMode +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -56,6 +76,7 @@ public class DataForNextActivity implements Parcelable {
         parcel.writeDouble(frequency);
         parcel.writeString(name);
         parcel.writeInt(type);
+        parcel.writeInt(id_runMode);
     }
 
     public static final Parcelable.Creator<DataForNextActivity> CREATOR = new Parcelable.Creator<DataForNextActivity>()
