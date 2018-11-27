@@ -69,12 +69,12 @@ public class DataForNextActivityBdd {
     public List<DataModels> getAllDatas(RunModeBdd runModeBdd){
         List<DataModels> data = new ArrayList<DataModels>();
 
-        Cursor cursor = bdd.rawQuery("SELECT name, type, frequency, id_run_mode , nameMode, necessaryIndex FROM Sensors INNER JOIN RunMode ON id_run_mode = RunMode.id" , null);
+        Cursor cursor = bdd.rawQuery("SELECT name, type, frequency, id_run_mode , nameMode, necessaryIndex FROM Sensors INNER JOIN RunMode ON RunMode.id = id_run_mode " , null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            DataModels data1 = (DataModels) cursorToSensors(cursor, runModeBdd);
-            data.add(data1);
+            //DataModels data1 = (DataModels) cursorToSensors(cursor, runModeBdd);
+            //data.add(data1);
             cursor.moveToNext();
         }
         return data;
@@ -108,6 +108,31 @@ public class DataForNextActivityBdd {
         }
         return id_Run_mode;
     }
+
+    public List<DataModels> _getAllDatas(RunModeBdd runModeBdd){
+        List<DataModels> data = new ArrayList<DataModels>();
+        runModeBdd.open();
+
+        Cursor cursor = bdd.rawQuery("SELECT name, type, frequency, id_run_mode , nameMode, necessaryIndex FROM Sensors " +
+                "INNER JOIN RunMode ON RunMode.id = id_run_mode " , null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            DataModels data1 = new DataModels();
+            data1.setName(cursor.getString(0));
+            data1.setType(cursor.getInt(1));
+            data1.setFrequency(cursor.getDouble(2));
+            data1.setId_runMode(cursor.getInt(3));
+            data1.setNameMode(cursor.getString(4));
+            data1.setNecessaryIndex(cursor.getInt(5));
+            data.add(data1);
+            cursor.moveToNext();
+        }
+        runModeBdd.close();
+        return data;
+
+    }
+
 
 
 }

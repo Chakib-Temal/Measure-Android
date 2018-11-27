@@ -59,7 +59,7 @@ public class ModeleRunActivity extends AppCompatActivity {
         dataSource.open();
         this.data = new RunModeBdd(this);
         data.open();
-        this.dataModels.addAll(dataSource.getAllDatas(data));
+        this.dataModels.addAll(dataSource._getAllDatas(data));
         data.close();
         dataSource.close();
 
