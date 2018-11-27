@@ -204,13 +204,25 @@ public class MainActivity extends AppCompatActivity  {
 
     public void prepareDataAndGoToTheNextActivity(){
         Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
-        intent.putExtras(this.prepareData());
+        Bundle bundle = this.prepareData();
+        intent.putExtras(bundle);
 
         if (choiceMode == getResources().getString(R.string.SAMPLE) && numberOfSample == new Long(0)){
             return;
         }else if (choiceMode == getResources().getString(R.string.TIME) && numberOfSecond == new Long(0)){
             return;
         }else {
+            RunModeBdd runModeBdd = new RunModeBdd(this);
+            DataForNextActivityBdd dataForNextActivityBdd = new DataForNextActivityBdd(this);
+            runModeBdd.open();
+            long id = runModeBdd.insertSingleModeRun((RunMode) bundle.getParcelable("configuration"));
+            runModeBdd.close();
+            dataForNextActivityBdd.open();
+            AllDataForRunActivity allDataForRunActivity = new AllDataForRunActivity();
+            allDataForRunActivity.setDataForNextActivities(dataForNextActivities);
+            dataForNextActivityBdd.insertActualSensor(allDataForRunActivity, (int) id);
+            dataForNextActivityBdd.close();
+
             startActivity(intent);
             finish();
         }
@@ -269,16 +281,7 @@ public class MainActivity extends AppCompatActivity  {
 
         //save modele
 
-        RunModeBdd runModeBdd = new RunModeBdd(this);
-        DataForNextActivityBdd dataForNextActivityBdd = new DataForNextActivityBdd(this);
-        runModeBdd.open();
-        long id = runModeBdd.insertSingleModeRun(configurationForNextActivity);
-        runModeBdd.close();
-        dataForNextActivityBdd.open();
-        AllDataForRunActivity allDataForRunActivity = new AllDataForRunActivity();
-        allDataForRunActivity.setDataForNextActivities(dataForNextActivities);
-        dataForNextActivityBdd.insertActualSensor(allDataForRunActivity, (int) id);
-        dataForNextActivityBdd.close();
+
 
 
 
@@ -289,7 +292,13 @@ public class MainActivity extends AppCompatActivity  {
 
     public void onClickModele(View view) {
         Intent intent = new Intent(MainActivity.this, ModeleRunActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
 }

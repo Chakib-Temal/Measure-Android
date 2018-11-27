@@ -47,4 +47,9 @@ public class RunModeBdd {
         values.put(COL_MR_NAME_MODE, runMode.getNameMode());
         return this.bdd.insert(TABLE_RUN_MODE, null, values);
     }
+
+    public void deleteModeRun(int id){
+        bdd.delete(DatabaseHandler.TABLE_RUN_MODE, DatabaseHandler.COL_MR_ID
+                + " = " + id, null);
+    }
 }

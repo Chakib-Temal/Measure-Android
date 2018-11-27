@@ -53,14 +53,19 @@ public class ModelsAdapter extends BaseAdapter {
         TextView listSensorOfActualModel = (TextView) root.findViewById(R.id.listSensorOfActualModel);
 
         AllDataForRunActivity allDataForRunActivity = (AllDataForRunActivity) getItem(position);
-        nameMode.setText(allDataForRunActivity.getRunMode().getNameMode());
-        necessaryIndex.setText(Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
 
-        String sensorName = "";
-        for (DataForNextActivity data : allDataForRunActivity.getDataForNextActivities() ){
-            sensorName += data.getName() + ", " + data.getFrequency() + ", " + data.getType() + " || ";
+        try{
+            nameMode.setText(allDataForRunActivity.getRunMode().getNameMode());
+            necessaryIndex.setText(Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
+
+            String sensorName = "";
+            for (DataForNextActivity data : allDataForRunActivity.getDataForNextActivities() ){
+                sensorName += data.getName() + ", " + data.getFrequency() + ", " + data.getType() + " || ";
+            }
+            listSensorOfActualModel.setText(sensorName);
+        }catch (Exception e){
+            e.getStackTrace();
         }
-        listSensorOfActualModel.setText(sensorName);
 
         return root;
     }

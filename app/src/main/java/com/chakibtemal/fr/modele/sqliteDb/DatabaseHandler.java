@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final String TABLE_SOLAR = "Solar";
+    public static final String TABLE_SOLAR = "Solar";
     private static final String COL_ID = "id";
     private static final String COL_NAME = "name";
     private static final String COL_VALUEX = "valueX";
@@ -19,8 +19,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             + COL_VALUEX + " REAL, " + COL_VALUEY + " REAL, " + COL_VALUEZ + " REAL, " + COL_TIME +" REAL NOT NULL);";
 
 
-    private static final String TABLE_RUN_MODE = "RunMode";
-    private static final String COL_MR_ID = "id";
+    public static final String TABLE_RUN_MODE = "RunMode";
+    public static final String COL_MR_ID = "id";
     private static final String COL_MR_NECESSARY_INDEX = "necessaryIndex";
     private static final String COL_MR_NAME_MODE = "nameMode";
 
@@ -29,9 +29,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             + COL_MR_NAME_MODE + " TEXT NOT NULL );";
 
 
-    private static final String TABLE_SENSORS = "Sensors";
+    public static final String TABLE_SENSORS = "Sensors";
     private static final String COL_S_ID = "id";
-    private static final String COL_S_ID_RUN_MODE = "id_run_mode";
+    public static final String COL_S_ID_RUN_MODE = "id_run_mode";
     private static final String COL_S_FREQUENCY = "frequency";
     private static final String COL_S_NAME = "name";
     private static final String COL_S_TYPE = "type";

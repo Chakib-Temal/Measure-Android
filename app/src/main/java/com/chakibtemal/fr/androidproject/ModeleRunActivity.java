@@ -1,5 +1,6 @@
 package com.chakibtemal.fr.androidproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -23,18 +24,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModeleRunActivity extends AppCompatActivity {
-    private RunMode configurationForNextActivity;
-    private List<AllDataForRunActivity> allDataForRunActivities = new ArrayList<AllDataForRunActivity>();
     private List<DataModels> dataModels = new ArrayList<DataModels>();
 
     private ListView listViewModels;
-    private List<AllDataForRunActivity> listModelsArray = new ArrayList<AllDataForRunActivity>();
+    private List<AllDataForRunActivity> listModelsArray;
 
+    private RunModeBdd data;
+    private DataForNextActivityBdd dataSource;
+    private ModelsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modele_run);
+    }
+
+    @Override
+    protected void onResume() {
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,11 +53,11 @@ public class ModeleRunActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        listModelsArray = new ArrayList<AllDataForRunActivity>();
 
-
-        DataForNextActivityBdd dataSource = new DataForNextActivityBdd(this);
+        this.dataSource = new DataForNextActivityBdd(this);
         dataSource.open();
-        RunModeBdd data = new RunModeBdd(this);
+        this.data = new RunModeBdd(this);
         data.open();
         this.dataModels.addAll(dataSource.getAllDatas(data));
         data.close();
@@ -63,6 +70,7 @@ public class ModeleRunActivity extends AppCompatActivity {
                 maxIdTableRunMode = d.getId_runMode();
             }
         }
+        String empty = new String();
 
         for (int id= 1; id <= maxIdTableRunMode;  id++){
             AllDataForRunActivity adf = new AllDataForRunActivity();
@@ -77,15 +85,20 @@ public class ModeleRunActivity extends AppCompatActivity {
                     runMode.setNecessaryIndex(d.getNecessaryIndex());
                     runMode.setNameMode(d.getNameMode());
                     adf.setRunMode(runMode);
-
                     adf.getDataForNextActivities().add(datas);
                 }
             }
-            listModelsArray.add(adf);
+            try {
+                if (!adf.getRunMode().getNameMode().equals(empty) || adf.getRunMode().getNameMode() != null  ){
+                    listModelsArray.add(adf);
+                }
+            }catch (Exception e){
+                continue;
+            }
         }
 
         this.listViewModels = (ListView) findViewById(R.id.listModels);
-        ModelsAdapter adapter = new ModelsAdapter(listModelsArray, this);
+        this.adapter = new ModelsAdapter(listModelsArray, this);
         this.listViewModels.setAdapter(adapter);
 
         for (AllDataForRunActivity d : listModelsArray){
@@ -100,7 +113,6 @@ public class ModeleRunActivity extends AppCompatActivity {
                 AllDataForRunActivity actualModele = listModelsArray.get(i);
                 RunMode runMode = actualModele.getRunMode();
                 List<DataForNextActivity> dataForNextActivities = actualModele.getDataForNextActivities();
-
 
                 for (DataForNextActivity d : actualModele.getDataForNextActivities()){
                     System.out.println(d.getName() + " / " + d.getId_runMode());
@@ -117,13 +129,37 @@ public class ModeleRunActivity extends AppCompatActivity {
 
         });
 
+        listViewModels.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AllDataForRunActivity actualModele = listModelsArray.get(i);
+                actualModele.getDataForNextActivities();
+                dataSource.open();
+                int id_RunMode = dataSource.deleteSensorsOfModel(actualModele);
+                dataSource.close();
+                data.open();
+                data.deleteModeRun(id_RunMode);
+                data.close();
+
+                listModelsArray.remove(i);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+        super.onResume();
     }
 
     public void goToRunActivity(Bundle bundle){
         Intent intent = new Intent(getApplicationContext(), RunSensorsActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
-        finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+    }
 }
