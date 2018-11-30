@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GraphDrawingActivity">
+    android:orientation="vertical"
+    tools:context=".RunSensorsActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/previousGraph"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="previous" />
+        <Button
+            android:id="@+id/nextGraph"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="next" />
+    </LinearLayout>
+
+    <ViewFlipper
+        android:id="@+id/viewFlipperGraphs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            android:id="@+id/graph" />
+
+    </ViewFlipper>
+
+</LinearLayout>

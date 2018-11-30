@@ -185,14 +185,14 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_refresh && saveModele ) {
-                item.setIcon(R.drawable.ic_launcher_background);
+                item.setIcon(R.drawable.ic_add_box_black_24dp);
                 saveModele = false;
-                Toast.makeText(this, "Don't save Modele", Toast.LENGTH_SHORT)
+                Toast.makeText(this, getResources().getString(R.string.dontSaveModele), Toast.LENGTH_SHORT)
                         .show();
         }else if (item.getItemId() == R.id.action_refresh && !saveModele ){
-            item.setIcon(R.drawable.ic_launcher_foreground);
+            item.setIcon(R.drawable.ic_add_box_green_24dp);
             saveModele = true;
-            Toast.makeText(this, "Save Modele", Toast.LENGTH_SHORT)
+            Toast.makeText(this, getResources().getString(R.string.saveModele), Toast.LENGTH_SHORT)
                     .show();
         }
         return true;

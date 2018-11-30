@@ -1,6 +1,9 @@
 package com.chakibtemal.fr.modele.valuesSensorModel;
 
-public class ValueOfSensor {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ValueOfSensor implements Parcelable {
     private float [] values = {0,0,0};
     private long time;
 
@@ -48,4 +51,31 @@ public class ValueOfSensor {
     public void setTime(long time) {
         this.time = time;
     }
+
+    protected ValueOfSensor(Parcel in) {
+        time = in.readLong();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(time);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ValueOfSensor> CREATOR = new Parcelable.Creator<ValueOfSensor>() {
+        @Override
+        public ValueOfSensor createFromParcel(Parcel in) {
+            return new ValueOfSensor(in);
+        }
+
+        @Override
+        public ValueOfSensor[] newArray(int size) {
+            return new ValueOfSensor[size];
+        }
+    };
 }

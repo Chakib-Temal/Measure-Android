@@ -22,6 +22,9 @@
     <string name="save">Sauvegarder</string>
     <string name="drawGraphs">Graphes</string>
 
+    <string name="saveModele">Sauvegarder modele ...</string>
+    <string name="dontSaveModele">Ne pas sauvagarder le modele</string>
+
     <string name="waiting">En Attente...</string>
 
     <string name="ACCELEROMETER">Accelerometer</string>

@@ -2,6 +2,7 @@ package com.chakibtemal.fr.androidproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.chakibtemal.fr.modele.service.Services;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
@@ -26,6 +28,9 @@ import com.chakibtemal.fr.modele.sharedResources.RunMode;
 import com.chakibtemal.fr.modele.sqliteDb.Solar;
 import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
 import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +68,18 @@ public class RunSensorsActivity extends AppCompatActivity {
 
     private boolean stopAllRuning = true;
 
+    private View activity_run_sensors, activity_graph_drawing;
+    private ViewFlipper viewFlipperGraphs;
+    private List<GraphView> listGraphView = new ArrayList<GraphView>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_run_sensors);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        this.activity_run_sensors = getLayoutInflater().inflate(R.layout.activity_run_sensors, null);
+        this.activity_graph_drawing = getLayoutInflater().inflate(R.layout.activity_graph_drawing, null);
+        setContentView(activity_run_sensors);
         /**
          * Receive List<SimfliedSensor> and RunMode configuration
          */
@@ -75,10 +88,10 @@ public class RunSensorsActivity extends AppCompatActivity {
         this.configuration = bundle.getParcelable("configuration");
 
         this.runMode = configuration.getNameMode();
-        this.body = (LinearLayout) findViewById(R.id.body);
-        this.buttonSave = (Button) findViewById(R.id.saveInBase);
-        this.buttonStop = (Button) findViewById(R.id.stopRuning);
-        this.buttonDrawGraphs = (Button) findViewById(R.id.goToDrawGraphs);
+        this.body = (LinearLayout) activity_run_sensors.findViewById(R.id.body);
+        this.buttonSave = (Button) activity_run_sensors.findViewById(R.id.saveInBase);
+        this.buttonStop = (Button) activity_run_sensors.findViewById(R.id.stopRuning);
+        this.buttonDrawGraphs = (Button) activity_run_sensors.findViewById(R.id.goToDrawGraphs);
 
         body.removeView(buttonSave);
         body.removeView(buttonDrawGraphs);
@@ -106,18 +119,22 @@ public class RunSensorsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        buttonStop.setText(R.string.stop);
-        stopAllRuning = true;
-        Double frequency = new Double(0);
-        for (ComplexSensor sensor : this.mySensors){
-            frequency = sensor.getDataOfSensor().getFrequency();
-            int type = sensor.getSensor().getType();
-            if (type == Sensor.TYPE_ACCELEROMETER){
-                sensorManager.registerListener(acceleroEvenetListner, sensor.getSensor(),  frequency.intValue(), 100000000);
-            }else if (type == Sensor.TYPE_GYROSCOPE){
-                sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(),  frequency.intValue(), 100000000);
-            }else if(type == Sensor.TYPE_PROXIMITY){
-                sensorManager.registerListener(proximityEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
+        if(!stopAllRuning){
+
+        }else {
+            buttonStop.setText(R.string.stop);
+            stopAllRuning = true;
+            Double frequency = new Double(0);
+            for (ComplexSensor sensor : this.mySensors) {
+                frequency = sensor.getDataOfSensor().getFrequency();
+                int type = sensor.getSensor().getType();
+                if (type == Sensor.TYPE_ACCELEROMETER) {
+                    sensorManager.registerListener(acceleroEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                } else if (type == Sensor.TYPE_GYROSCOPE) {
+                    sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                } else if (type == Sensor.TYPE_PROXIMITY) {
+                    sensorManager.registerListener(proximityEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }
             }
         }
     }
@@ -180,8 +197,47 @@ public class RunSensorsActivity extends AppCompatActivity {
      * GO TO THE GRAPHSDRAWING ACTIVITY
      */
     public void onClickDrawGraphs(View view) {
-        Intent intent = new Intent(this, GraphDrawingActivity.class);
-        startActivityForResult(intent, 0);
+        setContentView(activity_graph_drawing);
+        this.viewFlipperGraphs   = (ViewFlipper) activity_graph_drawing.findViewById(R.id.viewFlipperGraphs);
+        Button b1 = (Button) activity_graph_drawing.findViewById(R.id.previousGraph);
+        Button b2 = (Button) activity_graph_drawing.findViewById(R.id.nextGraph);
+
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewFlipperGraphs.showNext();
+
+            }
+        });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewFlipperGraphs.showPrevious();
+            }
+        });
+        viewFlipperGraphs.removeAllViews();
+
+        for(int i=3; i<5; i++)
+        {
+            GraphView graph = new GraphView(this);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                    new DataPoint(0, i+1),
+                    new DataPoint(1, i-1),
+                    new DataPoint(2, i+2),
+                    new DataPoint(3, 2),
+                    new DataPoint(4, 7)
+            });
+            graph.getViewport().setMinY(0.0);
+            graph.getViewport().setMaxY(8.0);
+            graph.getViewport().setYAxisBoundsManual(true);
+            graph.addSeries(series);
+            listGraphView.add(graph);
+        }
+
+        for (GraphView graph : listGraphView){
+            viewFlipperGraphs.addView(graph);
+        }
     }
 
     /**
@@ -223,12 +279,10 @@ public class RunSensorsActivity extends AppCompatActivity {
                 valueX.setText(String.valueOf("X : " +valuesOfProximity[0]));
                 valueY.setText(String.valueOf("Y : 0" ));
                 valueZ.setText(String.valueOf("Z : 0" ));
-
             }
             return root;
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -271,6 +325,8 @@ public class RunSensorsActivity extends AppCompatActivity {
                 e.getStackTrace();
             }
             // System.out.println("compteur accelero : " + compterIndexAccelerometer + " : " + accelerometerValues.length + " /// gyro : " + compterIndexGyroscope +  " : " + gyroscopeValues.length + " /// proximity : " + compterIndexProximity+ " : " + proximityValues.length );
+        }else {
+            stopAllRuning = true;
         }
     }
 
@@ -293,7 +349,7 @@ public class RunSensorsActivity extends AppCompatActivity {
             }
         }
 
-        if (valuesOfGyroscope != null){
+        if (gyroscopeValues != null){
             for (int i=0 ; i < compterIndexGyroscope; i++){
                 solar.setName(getResources().getString(R.string.GYROSCOPE));
                 solar.setValueX(gyroscopeValues[i].getValues()[0]);
@@ -304,7 +360,7 @@ public class RunSensorsActivity extends AppCompatActivity {
             }
         }
 
-        if (valuesOfProximity != null){
+        if (proximityValues != null){
             for (int i=0 ; i < compterIndexProximity ; i++){
                 solar.setName(getResources().getString(R.string.PROXIMITY));
                 solar.setValueX(proximityValues[i].getValues()[0]);
@@ -329,5 +385,4 @@ public class RunSensorsActivity extends AppCompatActivity {
             }
         }
     }
-
 }

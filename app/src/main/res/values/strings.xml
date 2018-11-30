@@ -24,6 +24,9 @@
     <string name="save">Save</string>
     <string name="drawGraphs">Graphs</string>
 
+    <string name="saveModele">Saving modele automatically</string>
+    <string name="dontSaveModele">Dont saving modele</string>
+
     <string name="waiting">Wainting...</string>
 
     <string name="ACCELEROMETER">Accelerometer</string>
