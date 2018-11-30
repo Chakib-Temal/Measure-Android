@@ -3,6 +3,7 @@ package com.chakibtemal.fr.androidproject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -218,8 +219,78 @@ public class RunSensorsActivity extends AppCompatActivity {
         });
         viewFlipperGraphs.removeAllViews();
 
-        for(int i=3; i<5; i++)
-        {
+
+        if (accelerometerValues != null){
+            GraphView graph = new GraphView(this);
+            DataPoint [] d = new DataPoint[compterIndexAccelerometer];
+            List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
+
+            for (int i=0 ; i < compterIndexAccelerometer ; i++){
+                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[0]);
+            }
+            list.add(this.getNewSerie(d, Color.GREEN));
+
+            for (int i = 0 ; i < compterIndexAccelerometer; i++){
+                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[1]);
+            }
+            list.add(this.getNewSerie(d, Color.BLACK));
+
+            for (int i = 0 ; i < compterIndexAccelerometer; i++){
+                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[2]);
+            }
+            list.add(this.getNewSerie(d, Color.RED));
+            for (LineGraphSeries<DataPoint> actualList : list){
+                graph.addSeries(actualList);
+            }
+            listGraphView.add(graph);
+        }
+        if(gyroscopeValues != null){
+            GraphView graph = new GraphView(this);
+            DataPoint [] d = new DataPoint[compterIndexGyroscope];
+            List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
+
+            for (int i=0 ; i < compterIndexGyroscope ; i++){
+                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[0]);
+            }
+            list.add(this.getNewSerie(d, Color.GREEN));
+
+            for (int i = 0 ; i < compterIndexGyroscope; i++){
+                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[1]);
+            }
+            list.add(this.getNewSerie(d, Color.BLACK));
+
+            for (int i = 0 ; i < compterIndexGyroscope; i++){
+                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[2]);
+            }
+            list.add(this.getNewSerie(d, Color.RED));
+            for (LineGraphSeries<DataPoint> actualList : list){
+                graph.addSeries(actualList);
+            }
+            listGraphView.add(graph);
+        }
+        if (proximityValues != null){
+            try{
+                GraphView graph = new GraphView(this);
+                DataPoint [] d = new DataPoint[compterIndexProximity];
+                List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
+
+                for (int i=0 ; i < compterIndexProximity ; i++){
+                    d[i] = new DataPoint(i, proximityValues[i].getValues()[0]);
+                }
+                list.add(this.getNewSerie(d, Color.GREEN));
+
+                for (LineGraphSeries<DataPoint> actualList : list){
+                    graph.addSeries(actualList);
+                }
+                listGraphView.add(graph);
+            }catch (Exception e){
+                e.getStackTrace();
+            }
+        }
+
+
+        /*
+        for(int i=0; i < x ; i++) {
             GraphView graph = new GraphView(this);
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
                     new DataPoint(0, i+1),
@@ -234,12 +305,17 @@ public class RunSensorsActivity extends AppCompatActivity {
             graph.addSeries(series);
             listGraphView.add(graph);
         }
-
-        for (GraphView graph : listGraphView){
-            viewFlipperGraphs.addView(graph);
+        */
+        for (GraphView graphe : listGraphView){
+            viewFlipperGraphs.addView(graphe);
         }
     }
 
+    public  LineGraphSeries<DataPoint> getNewSerie(DataPoint [] d ,int mcolor ){
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(d);
+        series.setColor(mcolor);
+        return series;
+    }
     /**
      * Class for the Adapter
      */
@@ -384,5 +460,19 @@ public class RunSensorsActivity extends AppCompatActivity {
                 this.proximityValues = new ValueOfSensor[this.necessaryIndex];
             }
         }
+    }
+
+    public int getNumberOfGraphe(){
+        int compter = 0;
+        if (accelerometerValues != null){
+            compter++;
+        }
+        if(gyroscopeValues != null){
+            compter++;
+        }
+        if (proximityValues != null){
+            compter++;
+        }
+        return compter;
     }
 }
