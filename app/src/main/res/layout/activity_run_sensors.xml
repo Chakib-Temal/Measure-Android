@@ -32,4 +32,11 @@
         android:text="@string/save"
         android:onClick="onClickSaveButton"/>
 
+    <Button
+        android:id="@+id/goToDrawGraphs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/drawGraphs"
+        android:onClick="onClickDrawGraphs"/>
+
 </LinearLayout>

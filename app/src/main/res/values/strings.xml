@@ -20,8 +20,11 @@
     <string name="introduceSampleValue">Enter number of Sample</string>
     <string name="introduceTimeValue">Enter time (second)</string>
 
-    <string name="stop">stop</string>
-    <string name="save">save</string>
+    <string name="stop">Stop</string>
+    <string name="save">Save</string>
+    <string name="drawGraphs">Graphs</string>
+
+    <string name="waiting">Wainting...</string>
 
     <string name="ACCELEROMETER">Accelerometer</string>
     <string name="GYROSCOPE">Gyroscope</string>

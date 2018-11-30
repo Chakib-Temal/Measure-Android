@@ -19,12 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.chakibtemal.fr.modele.sqliteDb.Solar;
-import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
-import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
+import com.chakibtemal.fr.modele.service.Services;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 import com.chakibtemal.fr.modele.sharedResources.RunMode;
+import com.chakibtemal.fr.modele.sqliteDb.Solar;
+import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
+import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class RunSensorsActivity extends AppCompatActivity {
     private String runMode ="";
     private int necessaryIndex;
 
-
+    private Services services = new Services();
 
     //prepare table of sensor :
     private ValueOfSensor [] accelerometerValues;
@@ -57,7 +58,10 @@ public class RunSensorsActivity extends AppCompatActivity {
 
     private Button buttonStop = null;
     private Button buttonSave = null;
+    private Button buttonDrawGraphs = null;
     private LinearLayout body = null;
+
+    private boolean stopAllRuning = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,35 +78,24 @@ public class RunSensorsActivity extends AppCompatActivity {
         this.body = (LinearLayout) findViewById(R.id.body);
         this.buttonSave = (Button) findViewById(R.id.saveInBase);
         this.buttonStop = (Button) findViewById(R.id.stopRuning);
+        this.buttonDrawGraphs = (Button) findViewById(R.id.goToDrawGraphs);
 
+        body.removeView(buttonSave);
+        body.removeView(buttonDrawGraphs);
 
-        if (this.runMode.equals(getResources().getString(R.string.SAMPLE))){
-            this.necessaryIndex = configuration.getNecessaryIndex();
-            body.removeView(buttonSave);
+        this.necessaryIndex = services.getNecessaryIndex(this.runMode, this, this.configuration);
 
-        }else if (this.runMode.equals(getResources().getString(R.string.TIME))){
-            this.necessaryIndex = configuration.getNecessaryIndex();
-            body.removeView(buttonSave);
-        }else if (this.runMode.equals(getResources().getString(R.string.UNLIMITED))){
-            this.necessaryIndex =  1000000;
-            body.removeView(buttonSave);
-        }
-
-
-        try {
-            System.out.println("voici la configuration choisit : Mode :" + configuration.getNameMode() + " /   " + " et l'index necessaire est  " + configuration.getNecessaryIndex() + " / ");
-        }catch (Exception e ){
-            e.getStackTrace();
-        }
-
+        try { System.out.println("voici la configuration choisit : Mode :" + configuration.getNameMode() + " /   " + " et l'index necessaire est  " + configuration.getNecessaryIndex() + " / ");
+        }catch (Exception e ){ e.getStackTrace(); }
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
         for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
             this.mySensors.add(new ComplexSensor(sensorManager, actualSimplifiedSensor.getType()));
             this.mySensors.get(mySensors.size() - 1).getDataOfSensor().setFrequency(actualSimplifiedSensor.getFrequency());
-            System.out.println("le capteur  " + actualSimplifiedSensor.getName() + " et ca frequence est   :" + actualSimplifiedSensor.getFrequency());
+            //System.out.println("le capteur  " + actualSimplifiedSensor.getName() + " et ca frequence est   :" + actualSimplifiedSensor.getFrequency());
         }
+        this.initializArrays();
 
         adapter = new SensorAdapter(this, 0, this.mySensors);
         listSensors = (ListView) findViewById(R.id.listWorkSensors);
@@ -113,19 +106,17 @@ public class RunSensorsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        buttonStop.setText(R.string.stop);
+        stopAllRuning = true;
         Double frequency = new Double(0);
         for (ComplexSensor sensor : this.mySensors){
             frequency = sensor.getDataOfSensor().getFrequency();
             int type = sensor.getSensor().getType();
-
             if (type == Sensor.TYPE_ACCELEROMETER){
-                this.accelerometerValues = new ValueOfSensor[this.necessaryIndex];
                 sensorManager.registerListener(acceleroEvenetListner, sensor.getSensor(),  frequency.intValue(), 100000000);
             }else if (type == Sensor.TYPE_GYROSCOPE){
-                this.gyroscopeValues = new ValueOfSensor[this.necessaryIndex];
                 sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(),  frequency.intValue(), 100000000);
             }else if(type == Sensor.TYPE_PROXIMITY){
-                this.proximityValues = new ValueOfSensor[this.necessaryIndex];
                 sensorManager.registerListener(proximityEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
             }
         }
@@ -134,7 +125,9 @@ public class RunSensorsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        stopAllRuning = false;
         this.stopSensors();
+        buttonStop.setText(R.string.waiting);
     }
 
     final SensorEventListener acceleroEvenetListner = new SensorEventListener() {
@@ -184,6 +177,14 @@ public class RunSensorsActivity extends AppCompatActivity {
     }
 
     /**
+     * GO TO THE GRAPHSDRAWING ACTIVITY
+     */
+    public void onClickDrawGraphs(View view) {
+        Intent intent = new Intent(this, GraphDrawingActivity.class);
+        startActivityForResult(intent, 0);
+    }
+
+    /**
      * Class for the Adapter
      */
     private class SensorAdapter extends ArrayAdapter<ComplexSensor>{
@@ -228,13 +229,13 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(RunSensorsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
-
 
     public void onClickSaveButton(View view) {
         final Context context = getApplicationContext();
@@ -246,6 +247,9 @@ public class RunSensorsActivity extends AppCompatActivity {
         }).start();
     }
 
+    /**
+     * Stop Sensors
+     */
     public void stopSensors(){
         for (ComplexSensor sensor : this.mySensors){
             int type =sensor.getSensor().getType();
@@ -257,15 +261,23 @@ public class RunSensorsActivity extends AppCompatActivity {
                 sensorManager.unregisterListener(proximityEventListner, sensor.getSensor());
             }
         }
-        try {
-            body.addView(buttonSave);
-        }catch (Exception e){
-            e.getStackTrace();
+
+        if (stopAllRuning){
+            try {
+                body.removeView(buttonStop);
+                body.addView(buttonSave);
+                body.addView(buttonDrawGraphs);
+            }catch (Exception e){
+                e.getStackTrace();
+            }
+            // System.out.println("compteur accelero : " + compterIndexAccelerometer + " : " + accelerometerValues.length + " /// gyro : " + compterIndexGyroscope +  " : " + gyroscopeValues.length + " /// proximity : " + compterIndexProximity+ " : " + proximityValues.length );
         }
-       // System.out.println("compteur accelero : " + compterIndexAccelerometer + " : " + accelerometerValues.length + " /// gyro : " + compterIndexGyroscope +  " : " + gyroscopeValues.length + " /// proximity : " + compterIndexProximity+ " : " + proximityValues.length );
     }
 
 
+    /**
+     * Save Data in BD
+     */
     public void saveData(SolarBdd sensorBdd){
         Solar solar = new Solar();
         sensorBdd.open();
@@ -304,4 +316,18 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
         sensorBdd.close();
     }
+
+    public void initializArrays(){
+        for (ComplexSensor sensor : this.mySensors){
+            int type = sensor.getSensor().getType();
+            if (type == Sensor.TYPE_ACCELEROMETER){
+                this.accelerometerValues = new ValueOfSensor[this.necessaryIndex];
+            }else if (type == Sensor.TYPE_GYROSCOPE){
+                this.gyroscopeValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_PROXIMITY){
+                this.proximityValues = new ValueOfSensor[this.necessaryIndex];
+            }
+        }
+    }
+
 }

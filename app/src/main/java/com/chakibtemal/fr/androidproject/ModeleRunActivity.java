@@ -41,6 +41,7 @@ public class ModeleRunActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

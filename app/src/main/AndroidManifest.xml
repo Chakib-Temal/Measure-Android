@@ -21,7 +21,8 @@
         <activity
             android:name=".ModeleRunActivity"
             android:label="@string/title_activity_modele_run"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".GraphDrawingActivity"></activity>
     </application>
 
 </manifest>

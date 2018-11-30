@@ -96,8 +96,10 @@ public class DataForNextActivityBdd {
             actualData.setNecessaryIndex(c.getInt(1));
             c.moveToNext();
         }
+        System.out.println();
         return actualData;
     }
+
 
     public int deleteSensorsOfModel(AllDataForRunActivity dataForRunActivity){
         int id_Run_mode = 0;
