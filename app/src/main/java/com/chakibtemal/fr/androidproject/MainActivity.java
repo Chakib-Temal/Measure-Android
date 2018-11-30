@@ -7,6 +7,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     private long numberOfSecond = 0;
 
     private String choiceMode ;
+    private boolean saveModele = false;
 
 
     @Override
@@ -169,6 +174,30 @@ public class MainActivity extends AppCompatActivity  {
         //end OnCreate(); here you can complete programme
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_refresh && saveModele ) {
+                item.setIcon(R.drawable.ic_launcher_background);
+                saveModele = false;
+                Toast.makeText(this, "Don't save Modele", Toast.LENGTH_SHORT)
+                        .show();
+        }else if (item.getItemId() == R.id.action_refresh && !saveModele ){
+            item.setIcon(R.drawable.ic_launcher_foreground);
+            saveModele = true;
+            Toast.makeText(this, "Save Modele", Toast.LENGTH_SHORT)
+                    .show();
+        }
+        return true;
+    }
+
     /**
      * Events on Button Run
      */
@@ -212,17 +241,18 @@ public class MainActivity extends AppCompatActivity  {
         }else if (choiceMode == getResources().getString(R.string.TIME) && numberOfSecond == new Long(0)){
             return;
         }else {
-            RunModeBdd runModeBdd = new RunModeBdd(this);
-            DataForNextActivityBdd dataForNextActivityBdd = new DataForNextActivityBdd(this);
-            runModeBdd.open();
-            long id = runModeBdd.insertSingleModeRun((RunMode) bundle.getParcelable("configuration"));
-            runModeBdd.close();
-            dataForNextActivityBdd.open();
-            AllDataForRunActivity allDataForRunActivity = new AllDataForRunActivity();
-            allDataForRunActivity.setDataForNextActivities(dataForNextActivities);
-            dataForNextActivityBdd.insertActualSensor(allDataForRunActivity, (int) id);
-            dataForNextActivityBdd.close();
-
+            if (saveModele){
+                RunModeBdd runModeBdd = new RunModeBdd(this);
+                DataForNextActivityBdd dataForNextActivityBdd = new DataForNextActivityBdd(this);
+                runModeBdd.open();
+                long id = runModeBdd.insertSingleModeRun((RunMode) bundle.getParcelable("configuration"));
+                runModeBdd.close();
+                dataForNextActivityBdd.open();
+                AllDataForRunActivity allDataForRunActivity = new AllDataForRunActivity();
+                allDataForRunActivity.setDataForNextActivities(dataForNextActivities);
+                dataForNextActivityBdd.insertActualSensor(allDataForRunActivity, (int) id);
+                dataForNextActivityBdd.close();
+            }
             startActivity(intent);
             finish();
         }
@@ -279,14 +309,7 @@ public class MainActivity extends AppCompatActivity  {
             bundle.putParcelable("configuration", configurationForNextActivity);
         }
 
-        //save modele
-
-
-
-
-
         bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
-
         return bundle;
     }
 
