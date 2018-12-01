@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.chakibtemal.fr.Adapter.BasicSpinnerAdapter;
 import com.chakibtemal.fr.modele.SharedPreferencesHelper.SharedPreferencesHelper;
+import com.chakibtemal.fr.modele.service.ItemSpinner;
 import com.chakibtemal.fr.modele.sharedResources.AllDataForRunActivity;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity  {
     private List<ComplexSensor> availableSensors = new ArrayList<ComplexSensor>();
     private List<DataForNextActivity> dataForNextActivities = new ArrayList<DataForNextActivity>();
 
-    private List<Double> itemSpinner = new ArrayList<Double>();
+    private List<ItemSpinner> itemsSpineer = new ArrayList<ItemSpinner>();
     private BasicSpinnerAdapter adapter;
 
     private long [] resultsOfCalibrage = {0,0,0,0};
@@ -73,8 +74,11 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        itemSpinner.add(new Double(0));itemSpinner.add(new Double(1));
-        itemSpinner.add(new Double(2));itemSpinner.add(new Double(3));
+        itemsSpineer.add(new ItemSpinner(new Double(0), getResources().getString(R.string.FASTEST)));
+        itemsSpineer.add(new ItemSpinner(new Double(1), getResources().getString(R.string.GAME)));
+        itemsSpineer.add(new ItemSpinner(new Double(2), getResources().getString(R.string.UI)));
+        itemsSpineer.add(new ItemSpinner(new Double(3), getResources().getString(R.string.NORMAL)));
+
         this.choiceMode = getResources().getString(R.string.SAMPLE);
 
         /**
@@ -95,7 +99,7 @@ public class MainActivity extends AppCompatActivity  {
         /**
          * Adapter for the View
          */
-        this.adapter = new BasicSpinnerAdapter(availableSensors, itemSpinner, this);
+        this.adapter = new BasicSpinnerAdapter(availableSensors, itemsSpineer, this);
         this.listSensors = (ListView) findViewById(R.id.listSensor);
         this.listSensors.setAdapter(adapter);
 
@@ -119,7 +123,8 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ComplexSensor actualSensor = availableSensors.get(i);
                 Spinner frequency = (Spinner) view.findViewById(R.id.spinner1);
-                actualSensor.getDataOfSensor().setFrequency( (double) frequency.getSelectedItem());
+                ItemSpinner item = (ItemSpinner) frequency.getSelectedItem();
+                actualSensor.getDataOfSensor().setFrequency( item.getFrequency());
 
                 if (!actualSensor.isSelected()){
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));

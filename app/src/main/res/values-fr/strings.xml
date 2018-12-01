@@ -40,4 +40,9 @@
     <string name="ACCELEROMETER">Accelerometer</string>
     <string name="GYROSCOPE">Gyroscope</string>
     <string name="PROXIMITY">Proximity</string>
+
+    <string name="FASTEST">Rapide</string>
+    <string name="GAME">Jeux</string>
+    <string name="UI">Interface Ui</string>
+    <string name="NORMAL">Normal</string>
 </resources>

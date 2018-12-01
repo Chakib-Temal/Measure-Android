@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.chakibtemal.fr.modele.service.Services;
@@ -30,8 +31,12 @@ import com.chakibtemal.fr.modele.sqliteDb.Solar;
 import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
 import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +78,7 @@ public class RunSensorsActivity extends AppCompatActivity {
     private ViewFlipper viewFlipperGraphs;
     private List<GraphView> listGraphView = new ArrayList<GraphView>();
 
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +86,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         this.activity_run_sensors   = getLayoutInflater().inflate(R.layout.activity_run_sensors, null);
         this.activity_graph_drawing = getLayoutInflater().inflate(R.layout.activity_graph_drawing, null);
         setContentView(activity_run_sensors);
+        this.context = this;
         /**
          * Receive List<SimfliedSensor> and RunMode configuration
          */
@@ -228,22 +234,24 @@ public class RunSensorsActivity extends AppCompatActivity {
             for (int i=0 ; i < compterIndexAccelerometer ; i++){
                 d[i] = new DataPoint(i, accelerometerValues[i].getValues()[0]);
             }
-            list.add(this.getNewSerie(d, Color.GREEN));
+            list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
             for (int i = 0 ; i < compterIndexAccelerometer; i++){
                 d[i] = new DataPoint(i, accelerometerValues[i].getValues()[1]);
             }
-            list.add(this.getNewSerie(d, Color.BLACK));
+            list.add(this.getNewSerie(d, Color.BLACK, "Y"));
 
             for (int i = 0 ; i < compterIndexAccelerometer; i++){
                 d[i] = new DataPoint(i, accelerometerValues[i].getValues()[2]);
             }
-            list.add(this.getNewSerie(d, Color.RED));
+            list.add(this.getNewSerie(d, Color.RED, "Z"));
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
             graph.getViewport().setMaxX(compterIndexAccelerometer + 20);
             graph.getViewport().setXAxisBoundsManual(true);
+            graph.setTitle(getResources().getString(R.string.ACCELEROMETER));
+
             listGraphView.add(graph);
         }
         if(gyroscopeValues != null){
@@ -254,22 +262,23 @@ public class RunSensorsActivity extends AppCompatActivity {
             for (int i=0 ; i < compterIndexGyroscope ; i++){
                 d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[0]);
             }
-            list.add(this.getNewSerie(d, Color.GREEN));
+            list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
             for (int i = 0 ; i < compterIndexGyroscope; i++){
                 d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[1]);
             }
-            list.add(this.getNewSerie(d, Color.BLACK));
+            list.add(this.getNewSerie(d, Color.BLACK, "Y"));
 
             for (int i = 0 ; i < compterIndexGyroscope; i++){
                 d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[2]);
             }
-            list.add(this.getNewSerie(d, Color.RED));
+            list.add(this.getNewSerie(d, Color.RED, "Z"));
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
             graph.getViewport().setMaxX(compterIndexGyroscope + 20);
             graph.getViewport().setXAxisBoundsManual(true);
+            graph.setTitle(getResources().getString(R.string.GYROSCOPE));
             listGraphView.add(graph);
         }
         if (proximityValues != null){
@@ -281,13 +290,14 @@ public class RunSensorsActivity extends AppCompatActivity {
                 for (int i=0 ; i < compterIndexProximity ; i++){
                     d[i] = new DataPoint(i, proximityValues[i].getValues()[0]);
                 }
-                list.add(this.getNewSerie(d, Color.GREEN));
+                list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
                 for (LineGraphSeries<DataPoint> actualList : list){
                     graph.addSeries(actualList);
                 }
                 graph.getViewport().setMaxX(compterIndexProximity + 1);
                 graph.getViewport().setXAxisBoundsManual(true);
+                graph.setTitle(getResources().getString(R.string.PROXIMITY));
                 listGraphView.add(graph);
             }catch (Exception e){
                 e.getStackTrace();
@@ -295,13 +305,23 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
 
         for (GraphView graphe : listGraphView){
+            graphe.getLegendRenderer().setVisible(true);
+            graphe.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
             viewFlipperGraphs.addView(graphe);
         }
     }
 
-    public  LineGraphSeries<DataPoint> getNewSerie(DataPoint [] d ,int mcolor ){
+    public  LineGraphSeries<DataPoint> getNewSerie(DataPoint [] d ,int mcolor, String title ){
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(d);
         series.setColor(mcolor);
+        series.setTitle(title);
+
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                Toast.makeText(context, "Point : "+ dataPoint, Toast.LENGTH_SHORT).show();
+            }
+        });
         return series;
     }
     /**
@@ -328,18 +348,18 @@ public class RunSensorsActivity extends AppCompatActivity {
             int type = sensor.getSensor().getType();
 
             if (type == Sensor.TYPE_ACCELEROMETER){
-                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                nameSensor.setText(sensor.getSensor().getName());
                 valueX.setText(String.valueOf("X : " + valuesOfAccelerometer[0]));
                 valueY.setText(String.valueOf("Y : " + valuesOfAccelerometer[1]));
                 valueZ.setText(String.valueOf("Z : " + valuesOfAccelerometer[2]));
             } else if (type == Sensor.TYPE_GYROSCOPE){
-                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                nameSensor.setText(sensor.getSensor().getName());
                 valueX.setText(String.valueOf("X : " + valuesOfGyroscope[0]));
                 valueY.setText(String.valueOf("Y : " + valuesOfGyroscope[1]));
                 valueZ.setText(String.valueOf("Z : " + valuesOfGyroscope[2]));
 
             }else if(type == Sensor.TYPE_PROXIMITY) {
-                nameSensor.setText("Type : " + sensor.getSensor().getName());
+                nameSensor.setText(sensor.getSensor().getName());
                 valueX.setText(String.valueOf("X : " +valuesOfProximity[0]));
                 valueY.setText(String.valueOf("Y : 0" ));
                 valueZ.setText(String.valueOf("Z : 0" ));

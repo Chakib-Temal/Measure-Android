@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.chakibtemal.fr.modele.service.ItemSpinner;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.androidproject.R;
 
@@ -20,11 +21,11 @@ import java.util.List;
 
 public class BasicSpinnerAdapter extends BaseAdapter {
 
-    private List<Double> mSpinnerItems = new ArrayList<Double>();
+    private List<ItemSpinner> mSpinnerItems = new ArrayList<ItemSpinner>();
     private List<ComplexSensor> mData = new ArrayList<ComplexSensor>();
     private Context mContext;
 
-    public BasicSpinnerAdapter(List<ComplexSensor> mData , List<Double> mSpinnerItems , Context mContext) {
+    public BasicSpinnerAdapter(List<ComplexSensor> mData , List<ItemSpinner> mSpinnerItems , Context mContext) {
         this.mSpinnerItems = mSpinnerItems;
         this.mData = mData;
         this.mContext = mContext;
@@ -57,7 +58,7 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         nameSensor.setText(sensor.getSensor().getName());
 
         final Spinner spinner = (Spinner) root.findViewById(R.id.spinner1);
-        ArrayAdapter<Double> adapter = new ArrayAdapter<Double>(mContext, android.R.layout.simple_list_item_1, mSpinnerItems);
+        ArrayAdapter<ItemSpinner> adapter = new ArrayAdapter<ItemSpinner>(mContext, android.R.layout.simple_list_item_1, mSpinnerItems);
         spinner.setAdapter(adapter);
 
         spinner.setFocusable(false);
@@ -65,7 +66,8 @@ public class BasicSpinnerAdapter extends BaseAdapter {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-               sensor.getDataOfSensor().setFrequency((double) spinner.getSelectedItem());
+                ItemSpinner item = (ItemSpinner) spinner.getSelectedItem();
+               sensor.getDataOfSensor().setFrequency(item.getFrequency());
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }

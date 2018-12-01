@@ -16,13 +16,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/previous" />
+            android:text="@string/previous"
+            android:drawableLeft="@drawable/ic_action_green_previous"/>
         <Button
             android:id="@+id/nextGraph"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/next" />
+            android:text="@string/next"
+            android:drawableRight="@drawable/ic_action_green_next"/>
     </LinearLayout>
 
     <ViewFlipper

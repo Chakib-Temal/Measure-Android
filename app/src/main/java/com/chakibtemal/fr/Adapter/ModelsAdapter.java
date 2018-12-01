@@ -55,10 +55,10 @@ public class ModelsAdapter extends BaseAdapter {
         AllDataForRunActivity allDataForRunActivity = (AllDataForRunActivity) getItem(position);
 
         try{
-            nameMode.setText(mContext.getResources().getString(R.string.nameMode) + allDataForRunActivity.getRunMode().getNameMode());
-            necessaryIndex.setText(mContext.getResources().getString(R.string.necessaryIndex) + Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
+            nameMode.setText(allDataForRunActivity.getRunMode().getNameMode());
+            necessaryIndex.setText(Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
 
-            String sensorName = mContext.getResources().getString(R.string.sensorsName);
+            String sensorName = "";
 
             for (DataForNextActivity data : allDataForRunActivity.getDataForNextActivities() ){
                 sensorName += data.getName() + "-"+ mContext.getResources().getString(R.string.frequencySensor) + " -> " + data.getFrequency() + " && ";

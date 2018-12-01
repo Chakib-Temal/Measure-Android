@@ -7,27 +7,71 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/nameMode"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
-    <TextView
-        android:id="@+id/necessaryIndex"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/fab_margin"
+            android:gravity="center"
+            android:text="@string/nameMode"/>
+
+        <TextView
+            android:id="@+id/nameMode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
-    <TextView
-        android:id="@+id/listSensorOfActualModel"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:text="@string/necessaryIndex"/>
+
+        <TextView
+            android:id="@+id/necessaryIndex"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    </TextView>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:text="@string/sensorsName"/>
 
-
-
-
+        <TextView
+            android:id="@+id/listSensorOfActualModel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"/>
+    </LinearLayout>
 
 </LinearLayout>

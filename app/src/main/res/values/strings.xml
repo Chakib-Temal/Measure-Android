@@ -41,4 +41,10 @@
     <string name="PROXIMITY">Proximity</string>
     <string name="title_activity_modele_run">ModeleRunActivity</string>
 
+    <string name="FASTEST">Fastest</string>
+    <string name="GAME">Game</string>
+    <string name="UI">Interface User</string>
+    <string name="NORMAL">Normal</string>
+
+
 </resources>
