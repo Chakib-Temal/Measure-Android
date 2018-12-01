@@ -78,7 +78,7 @@ public class RunSensorsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.activity_run_sensors = getLayoutInflater().inflate(R.layout.activity_run_sensors, null);
+        this.activity_run_sensors   = getLayoutInflater().inflate(R.layout.activity_run_sensors, null);
         this.activity_graph_drawing = getLayoutInflater().inflate(R.layout.activity_graph_drawing, null);
         setContentView(activity_run_sensors);
         /**
@@ -88,16 +88,16 @@ public class RunSensorsActivity extends AppCompatActivity {
         this.selectedSensors  = bundle.getParcelableArrayList("data");
         this.configuration = bundle.getParcelable("configuration");
 
-        this.runMode = configuration.getNameMode();
-        this.body = (LinearLayout) activity_run_sensors.findViewById(R.id.body);
-        this.buttonSave = (Button) activity_run_sensors.findViewById(R.id.saveInBase);
-        this.buttonStop = (Button) activity_run_sensors.findViewById(R.id.stopRuning);
+        this.runMode          = configuration.getNameMode();
+        this.body             = (LinearLayout) activity_run_sensors.findViewById(R.id.body);
+        this.buttonSave       = (Button) activity_run_sensors.findViewById(R.id.saveInBase);
+        this.buttonStop       = (Button) activity_run_sensors.findViewById(R.id.stopRuning);
         this.buttonDrawGraphs = (Button) activity_run_sensors.findViewById(R.id.goToDrawGraphs);
 
         body.removeView(buttonSave);
         body.removeView(buttonDrawGraphs);
 
-        this.necessaryIndex = services.getNecessaryIndex(this.runMode, this, this.configuration);
+        this.necessaryIndex   = services.getNecessaryIndex(this.runMode, this, this.configuration);
 
         try { System.out.println("voici la configuration choisit : Mode :" + configuration.getNameMode() + " /   " + " et l'index necessaire est  " + configuration.getNecessaryIndex() + " / ");
         }catch (Exception e ){ e.getStackTrace(); }
@@ -242,6 +242,8 @@ public class RunSensorsActivity extends AppCompatActivity {
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
+            graph.getViewport().setMaxX(compterIndexAccelerometer + 20);
+            graph.getViewport().setXAxisBoundsManual(true);
             listGraphView.add(graph);
         }
         if(gyroscopeValues != null){
@@ -266,6 +268,8 @@ public class RunSensorsActivity extends AppCompatActivity {
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
+            graph.getViewport().setMaxX(compterIndexGyroscope + 20);
+            graph.getViewport().setXAxisBoundsManual(true);
             listGraphView.add(graph);
         }
         if (proximityValues != null){
@@ -282,30 +286,14 @@ public class RunSensorsActivity extends AppCompatActivity {
                 for (LineGraphSeries<DataPoint> actualList : list){
                     graph.addSeries(actualList);
                 }
+                graph.getViewport().setMaxX(compterIndexProximity + 1);
+                graph.getViewport().setXAxisBoundsManual(true);
                 listGraphView.add(graph);
             }catch (Exception e){
                 e.getStackTrace();
             }
         }
 
-
-        /*
-        for(int i=0; i < x ; i++) {
-            GraphView graph = new GraphView(this);
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                    new DataPoint(0, i+1),
-                    new DataPoint(1, i-1),
-                    new DataPoint(2, i+2),
-                    new DataPoint(3, 2),
-                    new DataPoint(4, 7)
-            });
-            graph.getViewport().setMinY(0.0);
-            graph.getViewport().setMaxY(8.0);
-            graph.getViewport().setYAxisBoundsManual(true);
-            graph.addSeries(series);
-            listGraphView.add(graph);
-        }
-        */
         for (GraphView graphe : listGraphView){
             viewFlipperGraphs.addView(graphe);
         }
@@ -333,9 +321,9 @@ public class RunSensorsActivity extends AppCompatActivity {
             View root = inflater.inflate(R.layout.sensorworkitem, null);
 
             TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
-            TextView valueX = (TextView) root.findViewById(R.id.valueX);
-            TextView valueY = (TextView) root.findViewById(R.id.valueY);
-            TextView valueZ = (TextView) root.findViewById(R.id.valueZ);
+            TextView valueX     = (TextView) root.findViewById(R.id.valueX);
+            TextView valueY     = (TextView) root.findViewById(R.id.valueY);
+            TextView valueZ     = (TextView) root.findViewById(R.id.valueZ);
             ComplexSensor sensor = getItem(position);
             int type = sensor.getSensor().getType();
 
@@ -460,19 +448,5 @@ public class RunSensorsActivity extends AppCompatActivity {
                 this.proximityValues = new ValueOfSensor[this.necessaryIndex];
             }
         }
-    }
-
-    public int getNumberOfGraphe(){
-        int compter = 0;
-        if (accelerometerValues != null){
-            compter++;
-        }
-        if(gyroscopeValues != null){
-            compter++;
-        }
-        if (proximityValues != null){
-            compter++;
-        }
-        return compter;
     }
 }
