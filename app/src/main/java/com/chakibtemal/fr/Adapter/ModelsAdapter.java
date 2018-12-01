@@ -48,19 +48,20 @@ public class ModelsAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = inflater.inflate(R.layout.models_item, null);
 
-        TextView nameMode = (TextView) root.findViewById(R.id.nameMode);
-        TextView necessaryIndex = (TextView) root.findViewById(R.id.necessaryIndex);
+        TextView nameMode                = (TextView) root.findViewById(R.id.nameMode);
+        TextView necessaryIndex          = (TextView) root.findViewById(R.id.necessaryIndex);
         TextView listSensorOfActualModel = (TextView) root.findViewById(R.id.listSensorOfActualModel);
 
         AllDataForRunActivity allDataForRunActivity = (AllDataForRunActivity) getItem(position);
 
         try{
-            nameMode.setText(allDataForRunActivity.getRunMode().getNameMode());
-            necessaryIndex.setText(Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
+            nameMode.setText(mContext.getResources().getString(R.string.nameMode) + allDataForRunActivity.getRunMode().getNameMode());
+            necessaryIndex.setText(mContext.getResources().getString(R.string.necessaryIndex) + Integer.toString(allDataForRunActivity.getRunMode().getNecessaryIndex()));
 
-            String sensorName = "";
+            String sensorName = mContext.getResources().getString(R.string.sensorsName);
+
             for (DataForNextActivity data : allDataForRunActivity.getDataForNextActivities() ){
-                sensorName += data.getName() + ", " + data.getFrequency() + ", " + data.getType() + " || ";
+                sensorName += data.getName() + "-"+ mContext.getResources().getString(R.string.frequencySensor) + " -> " + data.getFrequency() + " && ";
             }
             listSensorOfActualModel.setText(sensorName);
         }catch (Exception e){

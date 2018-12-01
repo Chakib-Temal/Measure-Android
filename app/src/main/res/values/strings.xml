@@ -29,6 +29,11 @@
 
     <string name="waiting">Wainting...</string>
 
+    <string name="nameMode">Name Mode : </string>
+    <string name="necessaryIndex">Samples : </string>
+    <string name="sensorsName">Sensors : </string>
+    <string name="frequencySensor">Frequency : </string>
+
     <string name="ACCELEROMETER">Accelerometer</string>
     <string name="GYROSCOPE">Gyroscope</string>
     <string name="PROXIMITY">Proximity</string>

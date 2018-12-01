@@ -25,6 +25,13 @@
     <string name="saveModele">Sauvegarder modele ...</string>
     <string name="dontSaveModele">Ne pas sauvagarder le modele</string>
 
+    <string name="nameMode">Mode : </string>
+    <string name="necessaryIndex">Echantillons : </string>
+    <string name="sensorsName">Capteurs : </string>
+    <string name="frequencySensor">Fréquence : </string>
+
+
+
     <string name="waiting">En Attente...</string>
 
     <string name="ACCELEROMETER">Accelerometer</string>
