@@ -349,20 +349,20 @@ public class RunSensorsActivity extends AppCompatActivity {
 
             if (type == Sensor.TYPE_ACCELEROMETER){
                 nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X : " + valuesOfAccelerometer[0]));
-                valueY.setText(String.valueOf("Y : " + valuesOfAccelerometer[1]));
-                valueZ.setText(String.valueOf("Z : " + valuesOfAccelerometer[2]));
+                valueX.setText(String.valueOf("X = " + valuesOfAccelerometer[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfAccelerometer[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfAccelerometer[2]));
             } else if (type == Sensor.TYPE_GYROSCOPE){
                 nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X : " + valuesOfGyroscope[0]));
-                valueY.setText(String.valueOf("Y : " + valuesOfGyroscope[1]));
-                valueZ.setText(String.valueOf("Z : " + valuesOfGyroscope[2]));
+                valueX.setText(String.valueOf("X = " + valuesOfGyroscope[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfGyroscope[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfGyroscope[2]));
 
             }else if(type == Sensor.TYPE_PROXIMITY) {
                 nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X : " +valuesOfProximity[0]));
-                valueY.setText(String.valueOf("Y : 0" ));
-                valueZ.setText(String.valueOf("Z : 0" ));
+                valueX.setText(String.valueOf("X = " +valuesOfProximity[0]));
+                valueY.setText(String.valueOf("Y = 0" ));
+                valueZ.setText(String.valueOf("Z = 0" ));
             }
             return root;
         }

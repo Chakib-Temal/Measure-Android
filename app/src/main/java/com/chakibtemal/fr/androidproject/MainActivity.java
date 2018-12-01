@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity  {
                     actualSensor.setSelected(true);
                     dataForNextActivities.add(actualSensor.getDataOfSensor());
                 }else {
-                    view.setBackgroundColor(getResources().getColor(R.color.colorBlank));
+                    view.setBackgroundColor(getResources().getColor(R.color.defaultBackground));
                     actualSensor.setSelected(false);
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
                 }
