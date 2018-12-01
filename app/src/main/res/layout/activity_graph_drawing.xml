@@ -16,13 +16,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="previous" />
+            android:text="@string/previous" />
         <Button
             android:id="@+id/nextGraph"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="next" />
+            android:text="@string/next" />
     </LinearLayout>
 
     <ViewFlipper

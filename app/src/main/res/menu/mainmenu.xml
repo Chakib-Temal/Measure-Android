@@ -2,14 +2,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/modeles"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_baseline_burst_mode_24px"
+        android:title="Refresh"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/calibration"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_baseline_autorenew_24px"
+        android:title="Refresh"
+        app:showAsAction="always">
+    </item>
+
+    <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:icon="@drawable/ic_add_box_black_24dp"
         android:title="Refresh"
         app:showAsAction="always">
-
     </item>
-
-
 
 </menu>

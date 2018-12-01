@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,7 +35,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity  {
 
     private ListView listSensors = null;
-    private Button goToCalibrageActivity = null;
     private LinearLayout body = null;
     private EditText sampledInput = null;
     private EditText timeInput = null;
@@ -111,7 +109,6 @@ public class MainActivity extends AppCompatActivity  {
         this.choiceModeGroup = (RadioGroup) findViewById(R.id.listOfChoicesMode);
         this.choiceModeGroup.check(R.id.radioSampleMode);
 
-        this.goToCalibrageActivity = (Button) findViewById(R.id.gotoCalibrageActivity);
         this.body.removeView(timeInput);
 
         /**
@@ -133,18 +130,6 @@ public class MainActivity extends AppCompatActivity  {
                     actualSensor.setSelected(false);
                     dataForNextActivities.remove(actualSensor.getDataOfSensor());
                 }
-            }
-        });
-
-        /**
-         * Event for Calibrage Button
-         */
-        this.goToCalibrageActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CalibrageSensorActivity.class);
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -184,17 +169,29 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.action_refresh && saveModele ) {
+        if (item.getItemId() == R.id.action_refresh) {
+            if (saveModele){
                 item.setIcon(R.drawable.ic_add_box_black_24dp);
                 saveModele = false;
                 Toast.makeText(this, getResources().getString(R.string.dontSaveModele), Toast.LENGTH_SHORT)
                         .show();
-        }else if (item.getItemId() == R.id.action_refresh && !saveModele ){
-            item.setIcon(R.drawable.ic_add_box_green_24dp);
-            saveModele = true;
-            Toast.makeText(this, getResources().getString(R.string.saveModele), Toast.LENGTH_SHORT)
-                    .show();
+            }else {
+                item.setIcon(R.drawable.ic_add_box_green_24dp);
+                saveModele = true;
+                Toast.makeText(this, getResources().getString(R.string.saveModele), Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+        }else if (item.getItemId() == R.id.calibration){
+            Intent intent = new Intent(getApplicationContext(), CalibrageSensorActivity.class);
+            startActivity(intent);
+            finish();
+
+        }else if (item.getItemId() == R.id.modeles){
+            Intent intent = new Intent(MainActivity.this, ModeleRunActivity.class);
+            startActivityForResult(intent, 0);
         }
+
         return true;
     }
 
@@ -312,13 +309,6 @@ public class MainActivity extends AppCompatActivity  {
         bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) dataForNextActivities);
         return bundle;
     }
-
-    public void onClickModele(View view) {
-        Intent intent = new Intent(MainActivity.this, ModeleRunActivity.class);
-        startActivityForResult(intent, 0);
-
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

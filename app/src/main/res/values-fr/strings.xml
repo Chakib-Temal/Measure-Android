@@ -8,6 +8,9 @@
     <string name="alert">Reussi</string>
     <string name="AlertMessage">calibrage reussi</string>
 
+    <string name="previous">précedent</string>
+    <string name="next">Prochain</string>
+
     <string name="warning">Attention</string>
     <string name="warningMessage">vous devez calibrer avant</string>
 
