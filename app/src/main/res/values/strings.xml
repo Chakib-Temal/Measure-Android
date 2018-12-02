@@ -46,5 +46,5 @@
     <string name="UI">Interface User</string>
     <string name="NORMAL">Normal</string>
 
-
+    <string name="TIMES">Time-Abscice (ms)</string>
 </resources>

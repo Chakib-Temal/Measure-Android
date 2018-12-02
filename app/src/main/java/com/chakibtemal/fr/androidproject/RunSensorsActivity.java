@@ -31,6 +31,7 @@ import com.chakibtemal.fr.modele.sqliteDb.Solar;
 import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
 import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
@@ -231,53 +232,71 @@ public class RunSensorsActivity extends AppCompatActivity {
             DataPoint [] d = new DataPoint[compterIndexAccelerometer];
             List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
 
+            long starTime = accelerometerValues[0].getTime();
+
+
+
             for (int i=0 ; i < compterIndexAccelerometer ; i++){
-                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[0]);
+                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[0]);
             }
             list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
             for (int i = 0 ; i < compterIndexAccelerometer; i++){
-                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[1]);
+                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[1]);
             }
             list.add(this.getNewSerie(d, Color.BLACK, "Y"));
 
             for (int i = 0 ; i < compterIndexAccelerometer; i++){
-                d[i] = new DataPoint(i, accelerometerValues[i].getValues()[2]);
+                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[2]);
             }
             list.add(this.getNewSerie(d, Color.RED, "Z"));
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
-            graph.getViewport().setMaxX(compterIndexAccelerometer + 20);
-            graph.getViewport().setXAxisBoundsManual(true);
+            try {
+                long milSecondeAllTime = (accelerometerValues[compterIndexAccelerometer - 1].getTime() - starTime) / 1000000;
+                long percentage = (compterIndexAccelerometer * 10 ) / 100;
+                long milSecondesForSample = (milSecondeAllTime / compterIndexAccelerometer);
+                graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
+                graph.getViewport().setXAxisBoundsManual(true);
+            }catch (Exception e){
+                e.getStackTrace();
+            }
             graph.setTitle(getResources().getString(R.string.ACCELEROMETER));
-
             listGraphView.add(graph);
         }
         if(gyroscopeValues != null){
             GraphView graph = new GraphView(this);
             DataPoint [] d = new DataPoint[compterIndexGyroscope];
             List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
+            long starTime = gyroscopeValues[0].getTime();
 
             for (int i=0 ; i < compterIndexGyroscope ; i++){
-                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[0]);
+                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[0]);
             }
             list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
             for (int i = 0 ; i < compterIndexGyroscope; i++){
-                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[1]);
+                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[1]);
             }
             list.add(this.getNewSerie(d, Color.BLACK, "Y"));
 
             for (int i = 0 ; i < compterIndexGyroscope; i++){
-                d[i] = new DataPoint(i, gyroscopeValues[i].getValues()[2]);
+                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[2]);
             }
             list.add(this.getNewSerie(d, Color.RED, "Z"));
             for (LineGraphSeries<DataPoint> actualList : list){
                 graph.addSeries(actualList);
             }
-            graph.getViewport().setMaxX(compterIndexGyroscope + 20);
-            graph.getViewport().setXAxisBoundsManual(true);
+            try {
+                long milSecondeAllTime = (gyroscopeValues[compterIndexGyroscope - 1].getTime() - starTime) / 1000000;
+                long percentage = (compterIndexGyroscope * 10 ) / 100;
+                long milSecondesForSample = (milSecondeAllTime / compterIndexGyroscope);
+                graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
+                graph.getViewport().setXAxisBoundsManual(true);
+            }catch (Exception e){
+                e.getStackTrace();
+            }
             graph.setTitle(getResources().getString(R.string.GYROSCOPE));
             listGraphView.add(graph);
         }
@@ -287,16 +306,25 @@ public class RunSensorsActivity extends AppCompatActivity {
                 DataPoint [] d = new DataPoint[compterIndexProximity];
                 List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
 
+                long starTime = proximityValues[0].getTime();
+
                 for (int i=0 ; i < compterIndexProximity ; i++){
-                    d[i] = new DataPoint(i, proximityValues[i].getValues()[0]);
+                    d[i] = new DataPoint((proximityValues[i].getTime() - starTime)/1000000, proximityValues[i].getValues()[0]);
                 }
                 list.add(this.getNewSerie(d, Color.GREEN, "X"));
 
                 for (LineGraphSeries<DataPoint> actualList : list){
                     graph.addSeries(actualList);
                 }
-                graph.getViewport().setMaxX(compterIndexProximity + 1);
-                graph.getViewport().setXAxisBoundsManual(true);
+                try {
+                    long milSecondeAllTime = (proximityValues[compterIndexProximity - 1].getTime() - starTime) / 1000000;
+                    long percentage = (compterIndexProximity * 20 ) / 100;
+                    long milSecondesForSample = (milSecondeAllTime / compterIndexProximity);
+                    graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
+                    graph.getViewport().setXAxisBoundsManual(true);
+                }catch (Exception e){
+                    e.getStackTrace();
+                }
                 graph.setTitle(getResources().getString(R.string.PROXIMITY));
                 listGraphView.add(graph);
             }catch (Exception e){
@@ -307,6 +335,8 @@ public class RunSensorsActivity extends AppCompatActivity {
         for (GraphView graphe : listGraphView){
             graphe.getLegendRenderer().setVisible(true);
             graphe.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+            GridLabelRenderer gridLabel = graphe.getGridLabelRenderer();
+            gridLabel.setHorizontalAxisTitle(getResources().getString(R.string.TIMES));
             viewFlipperGraphs.addView(graphe);
         }
     }
