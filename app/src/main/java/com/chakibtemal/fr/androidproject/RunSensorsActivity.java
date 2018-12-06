@@ -210,6 +210,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         Button b1 = (Button) activity_graph_drawing.findViewById(R.id.previousGraph);
         Button b2 = (Button) activity_graph_drawing.findViewById(R.id.nextGraph);
 
+        viewFlipperGraphs.removeAllViews();
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,8 +225,6 @@ public class RunSensorsActivity extends AppCompatActivity {
                 viewFlipperGraphs.showPrevious();
             }
         });
-        viewFlipperGraphs.removeAllViews();
-
 
         if (accelerometerValues != null){
             GraphView graph = new GraphView(this);
@@ -233,8 +232,6 @@ public class RunSensorsActivity extends AppCompatActivity {
             List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
 
             long starTime = accelerometerValues[0].getTime();
-
-
 
             for (int i=0 ; i < compterIndexAccelerometer ; i++){
                 d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[0]);
@@ -332,13 +329,15 @@ public class RunSensorsActivity extends AppCompatActivity {
             }
         }
 
-        for (GraphView graphe : listGraphView){
-            graphe.getLegendRenderer().setVisible(true);
-            graphe.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-            GridLabelRenderer gridLabel = graphe.getGridLabelRenderer();
+        for (int i=0; i < listGraphView.size(); i++){
+            listGraphView.get(i).getLegendRenderer().setVisible(true);
+            listGraphView.get(i).getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+            GridLabelRenderer gridLabel = listGraphView.get(i).getGridLabelRenderer();
             gridLabel.setHorizontalAxisTitle(getResources().getString(R.string.TIMES));
-            viewFlipperGraphs.addView(graphe);
+            viewFlipperGraphs.addView(listGraphView.get(i), i);
         }
+
+
     }
 
     public  LineGraphSeries<DataPoint> getNewSerie(DataPoint [] d ,int mcolor, String title ){
