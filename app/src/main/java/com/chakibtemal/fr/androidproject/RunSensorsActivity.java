@@ -2,8 +2,6 @@ package com.chakibtemal.fr.androidproject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,9 +18,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.chakibtemal.fr.modele.drawingGraphs.DrawGraphHelper;
 import com.chakibtemal.fr.modele.service.Services;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
@@ -30,14 +28,6 @@ import com.chakibtemal.fr.modele.sharedResources.RunMode;
 import com.chakibtemal.fr.modele.sqliteDb.Solar;
 import com.chakibtemal.fr.modele.sqliteDb.SolarBdd;
 import com.chakibtemal.fr.modele.valuesSensorModel.ValueOfSensor;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,13 +67,13 @@ public class RunSensorsActivity extends AppCompatActivity {
 
     private View activity_run_sensors, activity_graph_drawing;
     private ViewFlipper viewFlipperGraphs;
-    private List<GraphView> listGraphView = new ArrayList<GraphView>();
+    private List<View> listGraphView = new ArrayList<View>();
 
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.activity_run_sensors   = getLayoutInflater().inflate(R.layout.activity_run_sensors, null);
         this.activity_graph_drawing = getLayoutInflater().inflate(R.layout.activity_graph_drawing, null);
         setContentView(activity_run_sensors);
@@ -207,152 +197,40 @@ public class RunSensorsActivity extends AppCompatActivity {
     public void onClickDrawGraphs(View view) {
         setContentView(activity_graph_drawing);
         this.viewFlipperGraphs   = (ViewFlipper) activity_graph_drawing.findViewById(R.id.viewFlipperGraphs);
-        Button b1 = (Button) activity_graph_drawing.findViewById(R.id.previousGraph);
-        Button b2 = (Button) activity_graph_drawing.findViewById(R.id.nextGraph);
+        Button previousButton = (Button) activity_graph_drawing.findViewById(R.id.previousGraph);
+        Button nextButton = (Button) activity_graph_drawing.findViewById(R.id.nextGraph);
 
         viewFlipperGraphs.removeAllViews();
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewFlipperGraphs.showNext();
-
-            }
-        });
-
-        b2.setOnClickListener(new View.OnClickListener() {
+        previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewFlipperGraphs.showPrevious();
+
             }
         });
 
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewFlipperGraphs.showNext();
+            }
+        });
+
+        DrawGraphHelper drawGraphHelper = new DrawGraphHelper(this);
         if (accelerometerValues != null){
-            GraphView graph = new GraphView(this);
-            DataPoint [] d = new DataPoint[compterIndexAccelerometer];
-            List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
-
-            long starTime = accelerometerValues[0].getTime();
-
-            for (int i=0 ; i < compterIndexAccelerometer ; i++){
-                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[0]);
-            }
-            list.add(this.getNewSerie(d, Color.GREEN, "X"));
-
-            for (int i = 0 ; i < compterIndexAccelerometer; i++){
-                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[1]);
-            }
-            list.add(this.getNewSerie(d, Color.BLACK, "Y"));
-
-            for (int i = 0 ; i < compterIndexAccelerometer; i++){
-                d[i] = new DataPoint((accelerometerValues[i].getTime() - starTime)/1000000, accelerometerValues[i].getValues()[2]);
-            }
-            list.add(this.getNewSerie(d, Color.RED, "Z"));
-            for (LineGraphSeries<DataPoint> actualList : list){
-                graph.addSeries(actualList);
-            }
-            try {
-                long milSecondeAllTime = (accelerometerValues[compterIndexAccelerometer - 1].getTime() - starTime) / 1000000;
-                long percentage = (compterIndexAccelerometer * 10 ) / 100;
-                long milSecondesForSample = (milSecondeAllTime / compterIndexAccelerometer);
-                graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
-                graph.getViewport().setXAxisBoundsManual(true);
-            }catch (Exception e){
-                e.getStackTrace();
-            }
-            graph.setTitle(getResources().getString(R.string.ACCELEROMETER));
-            listGraphView.add(graph);
+           drawGraphHelper.prepareGraphe(compterIndexAccelerometer, accelerometerValues, getResources().getString(R.string.ACCELEROMETER), 3, listGraphView);
         }
         if(gyroscopeValues != null){
-            GraphView graph = new GraphView(this);
-            DataPoint [] d = new DataPoint[compterIndexGyroscope];
-            List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
-            long starTime = gyroscopeValues[0].getTime();
-
-            for (int i=0 ; i < compterIndexGyroscope ; i++){
-                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[0]);
-            }
-            list.add(this.getNewSerie(d, Color.GREEN, "X"));
-
-            for (int i = 0 ; i < compterIndexGyroscope; i++){
-                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[1]);
-            }
-            list.add(this.getNewSerie(d, Color.BLACK, "Y"));
-
-            for (int i = 0 ; i < compterIndexGyroscope; i++){
-                d[i] = new DataPoint((gyroscopeValues[i].getTime() - starTime)/1000000, gyroscopeValues[i].getValues()[2]);
-            }
-            list.add(this.getNewSerie(d, Color.RED, "Z"));
-            for (LineGraphSeries<DataPoint> actualList : list){
-                graph.addSeries(actualList);
-            }
-            try {
-                long milSecondeAllTime = (gyroscopeValues[compterIndexGyroscope - 1].getTime() - starTime) / 1000000;
-                long percentage = (compterIndexGyroscope * 10 ) / 100;
-                long milSecondesForSample = (milSecondeAllTime / compterIndexGyroscope);
-                graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
-                graph.getViewport().setXAxisBoundsManual(true);
-            }catch (Exception e){
-                e.getStackTrace();
-            }
-            graph.setTitle(getResources().getString(R.string.GYROSCOPE));
-            listGraphView.add(graph);
+            drawGraphHelper.prepareGraphe(compterIndexGyroscope, gyroscopeValues, getResources().getString(R.string.GYROSCOPE), 3, listGraphView);
         }
+
         if (proximityValues != null){
-            try{
-                GraphView graph = new GraphView(this);
-                DataPoint [] d = new DataPoint[compterIndexProximity];
-                List<LineGraphSeries<DataPoint>> list = new ArrayList<LineGraphSeries<DataPoint>>();
-
-                long starTime = proximityValues[0].getTime();
-
-                for (int i=0 ; i < compterIndexProximity ; i++){
-                    d[i] = new DataPoint((proximityValues[i].getTime() - starTime)/1000000, proximityValues[i].getValues()[0]);
-                }
-                list.add(this.getNewSerie(d, Color.GREEN, "X"));
-
-                for (LineGraphSeries<DataPoint> actualList : list){
-                    graph.addSeries(actualList);
-                }
-                try {
-                    long milSecondeAllTime = (proximityValues[compterIndexProximity - 1].getTime() - starTime) / 1000000;
-                    long percentage = (compterIndexProximity * 20 ) / 100;
-                    long milSecondesForSample = (milSecondeAllTime / compterIndexProximity);
-                    graph.getViewport().setMaxX(milSecondeAllTime + milSecondesForSample * percentage);
-                    graph.getViewport().setXAxisBoundsManual(true);
-                }catch (Exception e){
-                    e.getStackTrace();
-                }
-                graph.setTitle(getResources().getString(R.string.PROXIMITY));
-                listGraphView.add(graph);
-            }catch (Exception e){
-                e.getStackTrace();
-            }
+            drawGraphHelper.prepareGraphe(compterIndexProximity, proximityValues,getResources().getString(R.string.PROXIMITY), 1, listGraphView );
         }
 
-        for (int i=0; i < listGraphView.size(); i++){
-            listGraphView.get(i).getLegendRenderer().setVisible(true);
-            listGraphView.get(i).getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-            GridLabelRenderer gridLabel = listGraphView.get(i).getGridLabelRenderer();
-            gridLabel.setHorizontalAxisTitle(getResources().getString(R.string.TIMES));
-            viewFlipperGraphs.addView(listGraphView.get(i), i);
-        }
-
-
+        drawGraphHelper.putViewChildFlliper(listGraphView,  viewFlipperGraphs);
     }
 
-    public  LineGraphSeries<DataPoint> getNewSerie(DataPoint [] d ,int mcolor, String title ){
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(d);
-        series.setColor(mcolor);
-        series.setTitle(title);
-
-        series.setOnDataPointTapListener(new OnDataPointTapListener() {
-            @Override
-            public void onTap(Series series, DataPointInterface dataPoint) {
-                Toast.makeText(context, "Point : "+ dataPoint, Toast.LENGTH_SHORT).show();
-            }
-        });
-        return series;
-    }
     /**
      * Class for the Adapter
      */
@@ -437,7 +315,6 @@ public class RunSensorsActivity extends AppCompatActivity {
             }catch (Exception e){
                 e.getStackTrace();
             }
-            // System.out.println("compteur accelero : " + compterIndexAccelerometer + " : " + accelerometerValues.length + " /// gyro : " + compterIndexGyroscope +  " : " + gyroscopeValues.length + " /// proximity : " + compterIndexProximity+ " : " + proximityValues.length );
         }else {
             stopAllRuning = true;
         }
