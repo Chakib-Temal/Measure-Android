@@ -37,9 +37,19 @@
 
     <string name="waiting">En Attente...</string>
 
-    <string name="ACCELEROMETER">Accelerometer</string>
+    <string name="ACCELEROMETER">Accelerometre</string>
     <string name="GYROSCOPE">Gyroscope</string>
     <string name="PROXIMITY">Proximity</string>
+    <string name="PHOTOMETER">Photometre</string>
+    <string name="AMBIENT_TEMPERATURE">Temperature_Ambiante</string>
+    <string name="GRAVITY">Gravity</string>
+    <string name="LINEAR_ACCELERATION">Acceleration_Linéaire</string>
+    <string name="MAGNETIC_FIELD">Magnetique</string>
+    <string name="ORIENTATION">Orientation</string>
+    <string name="PRESSURE">Pression</string>
+    <string name="RELATIVE_HUMIDITY">Humidité-Relative</string>
+    <string name="ROTATION_VECTOR">Rotation_Vecteur</string>
+    <string name="TEMPERATURE">Temperature</string>
 
     <string name="FASTEST">Rapide</string>
     <string name="GAME">Jeux</string>

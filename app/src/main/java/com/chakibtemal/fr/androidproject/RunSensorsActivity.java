@@ -44,11 +44,20 @@ public class RunSensorsActivity extends AppCompatActivity {
     protected float [] valuesOfGyroscope = {0, 0, 0};
     protected float [] valuesOfAccelerometer = {0, 0, 0};
     protected float [] valuesOfProximity = {0, 0, 0};
-    private RunMode configuration;
+    protected float [] valuesOfPhotometer = {0, 0, 0};
+    protected float [] valuesOfAmbiant_temperature = {0, 0, 0};
+    protected float [] valuesOfGravity = {0, 0, 0};
+    protected float [] valuesOfLinear_acceleration = {0, 0, 0};
+    protected float [] valuesOfMagnetic_field = {0, 0, 0};
+    protected float [] valuesOfOrientation = {0, 0, 0};
+    protected float [] valuesOfPressure = {0, 0, 0};
+    protected float [] valuesOfRelative_humidity = {0, 0, 0};
+    protected float [] valuesOfRotation_vector = {0, 0, 0};
+    protected float [] valuesOfTemperature = {0, 0, 0};
 
+    private RunMode configuration;
     private String runMode ="";
     private int necessaryIndex;
-
     private Services services = new Services();
 
     //prepare table of sensor :
@@ -58,6 +67,28 @@ public class RunSensorsActivity extends AppCompatActivity {
     private int compterIndexGyroscope = 0;
     private ValueOfSensor [] proximityValues;
     private int compterIndexProximity = 0;
+    private ValueOfSensor [] photomerValues;
+    private int compterIndexPhometer = 0;
+
+    private ValueOfSensor [] ambiant_temperatureValues;
+    private int compterIndexAmbiant_temperature = 0;
+    private ValueOfSensor [] gravityValues;
+    private int compterIndexGravity = 0;
+    private ValueOfSensor [] linear_accelerationValues;
+    private int compterIndexLinear_acceleration= 0;
+    private ValueOfSensor [] magnetic_fieldValues;
+    private int compterIndexMagnetic_field = 0;
+    private ValueOfSensor [] orientationValues;
+    private int compterIndexOrientation = 0;
+    private ValueOfSensor [] pressureValues;
+    private int compterIndexPressure = 0;
+    private ValueOfSensor [] relative_humidityValues;
+    private int compterIndexRelative_humidity = 0;
+    private ValueOfSensor [] rotation_vectorValues;
+    private int compterIndexRotation_vector = 0;
+    private ValueOfSensor [] temperatureValues;
+    private int compterIndexTemperature = 0;
+
 
     private Button buttonStop = null;
     private Button buttonSave = null;
@@ -131,6 +162,26 @@ public class RunSensorsActivity extends AppCompatActivity {
                     sensorManager.registerListener(gyrosCopeEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
                 } else if (type == Sensor.TYPE_PROXIMITY) {
                     sensorManager.registerListener(proximityEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                } else if (type == Sensor.TYPE_LIGHT) {
+                    sensorManager.registerListener(photometerEventListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_AMBIENT_TEMPERATURE){
+                    sensorManager.registerListener(ambiant_temperatureEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_GRAVITY){
+                    sensorManager.registerListener(gravityEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_LINEAR_ACCELERATION){
+                    sensorManager.registerListener(linear_accelerationEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_MAGNETIC_FIELD){
+                    sensorManager.registerListener(magnetic_fieldEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_ORIENTATION){
+                    sensorManager.registerListener(orientationEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_PRESSURE){
+                    sensorManager.registerListener(pressureEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_RELATIVE_HUMIDITY){
+                    sensorManager.registerListener(relative_humidityEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_ROTATION_VECTOR){
+                    sensorManager.registerListener(rotation_vectorEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
+                }else if(type == Sensor.TYPE_TEMPERATURE){
+                    sensorManager.registerListener(temperatureEvenetListner, sensor.getSensor(), frequency.intValue(), 100000000);
                 }
             }
         }
@@ -186,6 +237,146 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
     };
 
+    final SensorEventListener photometerEventListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            photomerValues[compterIndexPhometer] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp);
+            valuesOfPhotometer = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexPhometer == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexPhometer++;
+        }
+    };
+
+    final SensorEventListener ambiant_temperatureEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            ambiant_temperatureValues[compterIndexAmbiant_temperature] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfAmbiant_temperature = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexAmbiant_temperature == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexAmbiant_temperature++;
+        }
+    };
+
+    final SensorEventListener gravityEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            gravityValues[compterIndexGravity] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfGravity = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexGravity == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexGravity++;
+        }
+    };
+
+    final SensorEventListener linear_accelerationEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            linear_accelerationValues[compterIndexLinear_acceleration] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfLinear_acceleration = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexLinear_acceleration == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexLinear_acceleration++;
+        }
+    };
+
+    final SensorEventListener magnetic_fieldEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            magnetic_fieldValues[compterIndexMagnetic_field] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfMagnetic_field = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexMagnetic_field == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexMagnetic_field++;
+        }
+    };
+
+    final SensorEventListener orientationEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            orientationValues[compterIndexOrientation] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfOrientation = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexOrientation == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexOrientation++;
+        }
+    };
+
+    final SensorEventListener pressureEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            pressureValues[compterIndexPressure] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfPressure = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexPressure == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexPressure++;
+        }
+    };
+
+    final SensorEventListener relative_humidityEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            relative_humidityValues[compterIndexRelative_humidity] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfRelative_humidity = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexRelative_humidity == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexRelative_humidity++;
+        }
+    };
+
+    final SensorEventListener rotation_vectorEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            rotation_vectorValues[compterIndexRotation_vector] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfRotation_vector = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexRotation_vector == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexRotation_vector++;
+        }
+    };
+
+    final SensorEventListener temperatureEvenetListner = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            temperatureValues[compterIndexTemperature] = new ValueOfSensor(sensorEvent.values, sensorEvent.timestamp) ;
+            valuesOfTemperature = sensorEvent.values;
+            adapter.notifyDataSetChanged();
+            if(compterIndexTemperature == (necessaryIndex - 1)){
+                stopSensors();
+            }
+            compterIndexTemperature++;
+        }
+    };
+
     public void onClickStopRuning(View view) {
         stopSensors();
     }
@@ -227,6 +418,46 @@ public class RunSensorsActivity extends AppCompatActivity {
             drawGraphHelper.prepareGraphe(compterIndexProximity, proximityValues,getResources().getString(R.string.PROXIMITY), 1, listGraphView );
         }
 
+        if (photomerValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexPhometer, photomerValues,getResources().getString(R.string.PHOTOMETER), 1, listGraphView );
+        }
+
+        if (ambiant_temperatureValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexAmbiant_temperature, ambiant_temperatureValues,getResources().getString(R.string.AMBIENT_TEMPERATURE), 1, listGraphView );
+        }
+
+        if (gravityValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexGravity, gravityValues,getResources().getString(R.string.GRAVITY), 3, listGraphView );
+        }
+
+        if (linear_accelerationValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexLinear_acceleration, linear_accelerationValues,getResources().getString(R.string.LINEAR_ACCELERATION), 3, listGraphView );
+        }
+
+        if (magnetic_fieldValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexMagnetic_field, magnetic_fieldValues,getResources().getString(R.string.MAGNETIC_FIELD), 3, listGraphView );
+        }
+
+        if (orientationValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexOrientation, orientationValues,getResources().getString(R.string.ORIENTATION), 3, listGraphView );
+        }
+
+        if (pressureValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexPressure, pressureValues,getResources().getString(R.string.PRESSURE), 1, listGraphView );
+        }
+
+        if (relative_humidityValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexRelative_humidity, relative_humidityValues,getResources().getString(R.string.RELATIVE_HUMIDITY), 1, listGraphView );
+        }
+
+        if (rotation_vectorValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexRotation_vector, rotation_vectorValues,getResources().getString(R.string.ROTATION_VECTOR), 3, listGraphView );
+        }
+
+        if (temperatureValues != null){
+            drawGraphHelper.prepareGraphe(compterIndexTemperature, temperatureValues,getResources().getString(R.string.TEMPERATURE), 1, listGraphView );
+        }
+
         drawGraphHelper.putViewChildFlliper(listGraphView,  viewFlipperGraphs);
     }
 
@@ -261,6 +492,26 @@ public class RunSensorsActivity extends AppCompatActivity {
                 sensorManager.unregisterListener(gyrosCopeEventListner, sensor.getSensor());
             }else if(type == Sensor.TYPE_PROXIMITY){
                 sensorManager.unregisterListener(proximityEventListner, sensor.getSensor());
+            }else if (type == Sensor.TYPE_LIGHT){
+                sensorManager.unregisterListener(photometerEventListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_AMBIENT_TEMPERATURE){
+                sensorManager.unregisterListener(ambiant_temperatureEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_GRAVITY){
+                sensorManager.unregisterListener(gravityEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_LINEAR_ACCELERATION){
+                sensorManager.unregisterListener(linear_accelerationEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_MAGNETIC_FIELD){
+                sensorManager.unregisterListener(magnetic_fieldEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_ORIENTATION){
+                sensorManager.unregisterListener(orientationEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_PRESSURE){
+                sensorManager.unregisterListener(pressureEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_RELATIVE_HUMIDITY){
+                sensorManager.unregisterListener(relative_humidityEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_ROTATION_VECTOR){
+                sensorManager.unregisterListener(rotation_vectorEvenetListner, sensor.getSensor());
+            }else if(type == Sensor.TYPE_TEMPERATURE){
+                sensorManager.unregisterListener(temperatureEvenetListner, sensor.getSensor());
             }
         }
 
@@ -317,6 +568,105 @@ public class RunSensorsActivity extends AppCompatActivity {
                 sensorBdd.insertActualSensor(solar);
             }
         }
+
+        if (gravityValues != null){
+            for (int i=0 ; i < compterIndexGravity ; i++){
+                solar.setName(getResources().getString(R.string.GRAVITY));
+                solar.setValueX(gravityValues[i].getValues()[0]);
+                solar.setValueY(gravityValues[i].getValues()[1]);
+                solar.setValueZ(gravityValues[i].getValues()[2]);
+                solar.setTime(gravityValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (linear_accelerationValues != null){
+            for (int i=0 ; i < compterIndexLinear_acceleration ; i++){
+                solar.setName(getResources().getString(R.string.LINEAR_ACCELERATION));
+                solar.setValueX(linear_accelerationValues[i].getValues()[0]);
+                solar.setValueY(linear_accelerationValues[i].getValues()[1]);
+                solar.setValueZ(linear_accelerationValues[i].getValues()[2]);
+                solar.setTime(linear_accelerationValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (magnetic_fieldValues != null){
+            for (int i=0 ; i < compterIndexMagnetic_field ; i++){
+                solar.setName(getResources().getString(R.string.MAGNETIC_FIELD));
+                solar.setValueX(magnetic_fieldValues[i].getValues()[0]);
+                solar.setValueY(magnetic_fieldValues[i].getValues()[1]);
+                solar.setValueZ(magnetic_fieldValues[i].getValues()[2]);
+                solar.setTime(magnetic_fieldValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (orientationValues != null){
+            for (int i=0 ; i < compterIndexOrientation ; i++){
+                solar.setName(getResources().getString(R.string.ORIENTATION));
+                solar.setValueX(orientationValues[i].getValues()[0]);
+                solar.setValueY(orientationValues[i].getValues()[1]);
+                solar.setValueZ(orientationValues[i].getValues()[2]);
+                solar.setTime(orientationValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (photomerValues != null){
+            for (int i=0 ; i < compterIndexPhometer ; i++){
+                solar.setName(getResources().getString(R.string.PHOTOMETER));
+                solar.setValueX(photomerValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(photomerValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (pressureValues != null){
+            for (int i=0 ; i < compterIndexPressure ; i++){
+                solar.setName(getResources().getString(R.string.PRESSURE));
+                solar.setValueX(pressureValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(pressureValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (relative_humidityValues != null){
+            for (int i=0 ; i < compterIndexRelative_humidity ; i++){
+                solar.setName(getResources().getString(R.string.RELATIVE_HUMIDITY));
+                solar.setValueX(relative_humidityValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(relative_humidityValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (rotation_vectorEvenetListner != null){
+            for (int i=0 ; i < compterIndexRotation_vector ; i++){
+                solar.setName(getResources().getString(R.string.ROTATION_VECTOR));
+                solar.setValueX(rotation_vectorValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(rotation_vectorValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
+
+        if (ambiant_temperatureValues != null){
+            for (int i=0 ; i < compterIndexAmbiant_temperature ; i++){
+                solar.setName(getResources().getString(R.string.AMBIENT_TEMPERATURE));
+                solar.setValueX(ambiant_temperatureValues[i].getValues()[0]);
+                solar.setValueY(0);
+                solar.setValueZ(0);
+                solar.setTime(ambiant_temperatureValues[i].getTime());
+                sensorBdd.insertActualSensor(solar);
+            }
+        }
         sensorBdd.close();
     }
 
@@ -329,6 +679,26 @@ public class RunSensorsActivity extends AppCompatActivity {
                 this.gyroscopeValues = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_PROXIMITY){
                 this.proximityValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_LIGHT){
+                this.photomerValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_AMBIENT_TEMPERATURE){
+                this.ambiant_temperatureValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_GRAVITY){
+                this.gravityValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_LINEAR_ACCELERATION){
+                this.linear_accelerationValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_MAGNETIC_FIELD){
+                this.magnetic_fieldValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_ORIENTATION){
+                this.orientationValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_PRESSURE){
+                this.pressureValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_RELATIVE_HUMIDITY){
+                this.relative_humidityValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_ROTATION_VECTOR){
+                this.rotation_vectorValues = new ValueOfSensor[this.necessaryIndex];
+            }else if(type == Sensor.TYPE_TEMPERATURE){
+                this.temperatureValues = new ValueOfSensor[this.necessaryIndex];
             }
         }
     }
@@ -371,8 +741,86 @@ public class RunSensorsActivity extends AppCompatActivity {
                 valueX.setText(String.valueOf("X = " +valuesOfProximity[0]));
                 valueY.setText(String.valueOf("Y = 0" ));
                 valueZ.setText(String.valueOf("Z = 0" ));
+
+            }else if(type == Sensor.TYPE_GRAVITY) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfGravity[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfGravity[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfGravity[2]));
+
+            } else if(type == Sensor.TYPE_LINEAR_ACCELERATION) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfLinear_acceleration[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfLinear_acceleration[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfLinear_acceleration[2]));
+
+            }else if(type == Sensor.TYPE_MAGNETIC_FIELD) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfMagnetic_field[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfMagnetic_field[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfMagnetic_field[2]));
+
+            }else if(type == Sensor.TYPE_ORIENTATION) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfOrientation[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfOrientation[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfOrientation[2]));
+
+            }else if(type == Sensor.TYPE_PRESSURE) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfPressure[0]));
+                valueY.setText(String.valueOf("Y = 0"));
+                valueZ.setText(String.valueOf("Z = 0"));
+
+            }else if(type == Sensor.TYPE_LIGHT) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfPhotometer[0]));
+                valueY.setText(String.valueOf("Y = 0"));
+                valueZ.setText(String.valueOf("Z = 0"));
+
+            }else if(type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfTemperature[0]));
+                valueY.setText(String.valueOf("Y = 0"));
+                valueZ.setText(String.valueOf("Z = 0"));
+
+            }else if(type == Sensor.TYPE_RELATIVE_HUMIDITY) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfRelative_humidity[0]));
+                valueY.setText(String.valueOf("Y = 0"));
+                valueZ.setText(String.valueOf("Z = 0"));
+
+            }else if(type == Sensor.TYPE_ROTATION_VECTOR) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfRotation_vector[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfRotation_vector[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfRotation_vector[2]));
+
+            }else if(type == Sensor.TYPE_TEMPERATURE) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfTemperature[0]));
+                valueY.setText(String.valueOf("Y = 0"));
+                valueZ.setText(String.valueOf("Z = 0"));
             }
+
             return root;
         }
     }
 }
+
+/*
+add attribute     protected float [] valuesOfPhotometer = {0, 0, 0};
+private ValueOfSensor [] photomerValues;
+private int compterIndexPhometer = 0;
+
+InitialArray
+else if(type == Sensor.TYPE_LIGHT){
+                this.photomerValues = new ValueOfSensor[this.necessaryIndex];
+            }
+
+add events
+stop Sensors
+getView adapter
+saveData
+onClickDrawGraphs
+ */

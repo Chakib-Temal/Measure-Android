@@ -37,8 +37,21 @@
     <string name="frequencySensor">Frequency : </string>
 
     <string name="ACCELEROMETER">Accelerometer</string>
+    <string name="AMBIENT_TEMPERATURE">Ambient_Temperature</string>
+    <string name="GRAVITY">Gravity</string>
     <string name="GYROSCOPE">Gyroscope</string>
+    <string name="PHOTOMETER">Photometer</string>
+    <string name="LINEAR_ACCELERATION">Linear_Acceleration</string>
+    <string name="MAGNETIC_FIELD">Magnetic_Field</string>
+    <string name="ORIENTATION">Orientation</string>
+    <string name="PRESSURE">Pressure</string>
     <string name="PROXIMITY">Proximity</string>
+    <string name="RELATIVE_HUMIDITY">Relative_Humidity</string>
+    <string name="ROTATION_VECTOR">Rotation_Vector</string>
+    <string name="TEMPERATURE">Temperature</string>
+
+
+
     <string name="title_activity_modele_run">ModeleRunActivity</string>
 
     <string name="FASTEST">Fastest</string>

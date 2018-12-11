@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity  {
     private ComplexSensor accelerometer = null;
     private ComplexSensor gyroscope = null;
     private ComplexSensor aproximity = null;
+    private ComplexSensor photometer = null;
+    private ComplexSensor magnetic_field = null;
+    private ComplexSensor pressure = null;
+    private ComplexSensor ambiant_temperature = null;
+    private ComplexSensor temperature = null;
+    private ComplexSensor orientation = null;
+    private ComplexSensor gravity = null;
+    private ComplexSensor linear_acceleration = null;
+    private ComplexSensor relative_humidity = null;
+    private ComplexSensor rotation_vector = null;
 
     //to display available sensor
     private List<ComplexSensor> availableSensors = new ArrayList<ComplexSensor>();
@@ -80,21 +90,31 @@ public class MainActivity extends AppCompatActivity  {
         itemsSpineer.add(new ItemSpinner(new Double(3), getResources().getString(R.string.NORMAL)));
 
         this.choiceMode = getResources().getString(R.string.SAMPLE);
-
+        List<ComplexSensor> beforeValidationOfAvailaible = new ArrayList<ComplexSensor>();
         /**
          * Configuration for Sensors
          */
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        this.accelerometer = new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER);
-        this.gyroscope = new ComplexSensor(sensorManager, Sensor.TYPE_GYROSCOPE);
-        this.aproximity = new ComplexSensor(sensorManager, Sensor.TYPE_PROXIMITY);
+        sensorManager               = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        this.accelerometer          = new ComplexSensor(sensorManager, Sensor.TYPE_ACCELEROMETER);         beforeValidationOfAvailaible.add(accelerometer);
+        this.ambiant_temperature    = new ComplexSensor(sensorManager, Sensor.TYPE_AMBIENT_TEMPERATURE);   beforeValidationOfAvailaible.add(ambiant_temperature);
+        this.gravity                = new ComplexSensor(sensorManager, Sensor.TYPE_GRAVITY);               beforeValidationOfAvailaible.add(gravity);
+        this.gyroscope              = new ComplexSensor(sensorManager, Sensor.TYPE_GYROSCOPE);             beforeValidationOfAvailaible.add(gyroscope);
+        this.photometer             = new ComplexSensor(sensorManager, Sensor.TYPE_LIGHT);                 beforeValidationOfAvailaible.add(photometer);
+        this.linear_acceleration    = new ComplexSensor(sensorManager, Sensor.TYPE_LINEAR_ACCELERATION);   beforeValidationOfAvailaible.add(linear_acceleration);
+        this.magnetic_field         = new ComplexSensor(sensorManager, Sensor.TYPE_MAGNETIC_FIELD);        beforeValidationOfAvailaible.add(magnetic_field);
+        this.orientation            = new ComplexSensor(sensorManager, Sensor.TYPE_ORIENTATION);           beforeValidationOfAvailaible.add(orientation);
+        this.pressure               = new ComplexSensor(sensorManager, Sensor.TYPE_PRESSURE);              beforeValidationOfAvailaible.add(pressure);
+        this.aproximity             = new ComplexSensor(sensorManager, Sensor.TYPE_PROXIMITY);             beforeValidationOfAvailaible.add(aproximity);
+        this.relative_humidity      = new ComplexSensor(sensorManager, Sensor.TYPE_RELATIVE_HUMIDITY);     beforeValidationOfAvailaible.add(relative_humidity);
+        this.rotation_vector        = new ComplexSensor(sensorManager, Sensor.TYPE_ROTATION_VECTOR);       beforeValidationOfAvailaible.add(rotation_vector);
+        this.temperature            = new ComplexSensor(sensorManager, Sensor.TYPE_TEMPERATURE);           beforeValidationOfAvailaible.add(temperature);
 
         /**
          *
          here we recover the availability of sensors with static variable(ValidatorSensor),
          finally we can use ComplexSensor to find the state of the sensor itself
          */
-        ValidatorSensor.returnResults(this.accelerometer, this.gyroscope, this.aproximity, this.availableSensors);
+        ValidatorSensor.returnResults(beforeValidationOfAvailaible ,this.availableSensors);
 
         /**
          * Adapter for the View
@@ -314,3 +334,5 @@ public class MainActivity extends AppCompatActivity  {
         }catch (Exception e){ }
     }
 }
+
+//add attribut of sensor , add one line in Oncreate
