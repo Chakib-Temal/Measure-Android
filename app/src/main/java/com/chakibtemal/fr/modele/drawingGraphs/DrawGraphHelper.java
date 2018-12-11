@@ -146,9 +146,9 @@ public class DrawGraphHelper {
     public void pushSeries(List<LineGraphSeries<DataPoint>> list, GraphView graph  ){
         for (LineGraphSeries<DataPoint> actualList : list){
             graph.addSeries(actualList);
+
         }
     }
-
 
 
     public void scaleGraphX(ValueOfSensor[] sensorValue, int CompterIndex, long starTime, GraphView graph){

@@ -22,6 +22,7 @@ import android.widget.ViewFlipper;
 
 import com.chakibtemal.fr.modele.drawingGraphs.DrawGraphHelper;
 import com.chakibtemal.fr.modele.service.Services;
+import com.chakibtemal.fr.modele.service.ServiceHelper;
 import com.chakibtemal.fr.modele.sharedResources.ComplexSensor;
 import com.chakibtemal.fr.modele.sharedResources.DataForNextActivity;
 import com.chakibtemal.fr.modele.sharedResources.RunMode;
@@ -70,6 +71,7 @@ public class RunSensorsActivity extends AppCompatActivity {
     private List<View> listGraphView = new ArrayList<View>();
 
     private Context context;
+    private ServiceHelper serviceHelper = new ServiceHelper();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,11 +103,8 @@ public class RunSensorsActivity extends AppCompatActivity {
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
-        for(DataForNextActivity actualSimplifiedSensor: selectedSensors){
-            this.mySensors.add(new ComplexSensor(sensorManager, actualSimplifiedSensor.getType()));
-            this.mySensors.get(mySensors.size() - 1).getDataOfSensor().setFrequency(actualSimplifiedSensor.getFrequency());
-            //System.out.println("le capteur  " + actualSimplifiedSensor.getName() + " et ca frequence est   :" + actualSimplifiedSensor.getFrequency());
-        }
+
+        serviceHelper.addSelectedSensors(selectedSensors, sensorManager, mySensors);
         this.initializArrays();
 
         adapter = new SensorAdapter(this, 0, this.mySensors);
@@ -231,49 +230,7 @@ public class RunSensorsActivity extends AppCompatActivity {
         drawGraphHelper.putViewChildFlliper(listGraphView,  viewFlipperGraphs);
     }
 
-    /**
-     * Class for the Adapter
-     */
-    private class SensorAdapter extends ArrayAdapter<ComplexSensor>{
 
-        public SensorAdapter(@NonNull Context context, int resource, @NonNull List<ComplexSensor> objects) {
-            super(context, android.R.layout.simple_list_item_1, objects);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View root = inflater.inflate(R.layout.sensorworkitem, null);
-
-            TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
-            TextView valueX     = (TextView) root.findViewById(R.id.valueX);
-            TextView valueY     = (TextView) root.findViewById(R.id.valueY);
-            TextView valueZ     = (TextView) root.findViewById(R.id.valueZ);
-            ComplexSensor sensor = getItem(position);
-            int type = sensor.getSensor().getType();
-
-            if (type == Sensor.TYPE_ACCELEROMETER){
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X = " + valuesOfAccelerometer[0]));
-                valueY.setText(String.valueOf("Y = " + valuesOfAccelerometer[1]));
-                valueZ.setText(String.valueOf("Z = " + valuesOfAccelerometer[2]));
-            } else if (type == Sensor.TYPE_GYROSCOPE){
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X = " + valuesOfGyroscope[0]));
-                valueY.setText(String.valueOf("Y = " + valuesOfGyroscope[1]));
-                valueZ.setText(String.valueOf("Z = " + valuesOfGyroscope[2]));
-
-            }else if(type == Sensor.TYPE_PROXIMITY) {
-                nameSensor.setText(sensor.getSensor().getName());
-                valueX.setText(String.valueOf("X = " +valuesOfProximity[0]));
-                valueY.setText(String.valueOf("Y = 0" ));
-                valueZ.setText(String.valueOf("Z = 0" ));
-            }
-            return root;
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -373,6 +330,49 @@ public class RunSensorsActivity extends AppCompatActivity {
             }else if(type == Sensor.TYPE_PROXIMITY){
                 this.proximityValues = new ValueOfSensor[this.necessaryIndex];
             }
+        }
+    }
+
+    /**
+     * Class for the Adapter
+     */
+    private class SensorAdapter extends ArrayAdapter<ComplexSensor>{
+        public SensorAdapter(@NonNull Context context, int resource, @NonNull List<ComplexSensor> objects) {
+            super(context, android.R.layout.simple_list_item_1, objects);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            View root = inflater.inflate(R.layout.sensorworkitem, null);
+
+            TextView nameSensor = (TextView) root.findViewById(R.id.nameSensor);
+            TextView valueX     = (TextView) root.findViewById(R.id.valueX);
+            TextView valueY     = (TextView) root.findViewById(R.id.valueY);
+            TextView valueZ     = (TextView) root.findViewById(R.id.valueZ);
+            ComplexSensor sensor = getItem(position);
+            int type = sensor.getSensor().getType();
+
+            if (type == Sensor.TYPE_ACCELEROMETER){
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfAccelerometer[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfAccelerometer[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfAccelerometer[2]));
+            } else if (type == Sensor.TYPE_GYROSCOPE){
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " + valuesOfGyroscope[0]));
+                valueY.setText(String.valueOf("Y = " + valuesOfGyroscope[1]));
+                valueZ.setText(String.valueOf("Z = " + valuesOfGyroscope[2]));
+
+            }else if(type == Sensor.TYPE_PROXIMITY) {
+                nameSensor.setText(sensor.getSensor().getName());
+                valueX.setText(String.valueOf("X = " +valuesOfProximity[0]));
+                valueY.setText(String.valueOf("Y = 0" ));
+                valueZ.setText(String.valueOf("Z = 0" ));
+            }
+            return root;
         }
     }
 }

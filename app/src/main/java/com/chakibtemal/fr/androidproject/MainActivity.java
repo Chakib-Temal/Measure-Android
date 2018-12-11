@@ -146,11 +146,11 @@ public class MainActivity extends AppCompatActivity  {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if ( i == R.id.radioSampleMode){
                     body.removeView(timeInput);
-                    body.addView(sampledInput, 1);
+                    body.addView(sampledInput);
                     choiceMode = getResources().getString(R.string.SAMPLE);
                 }else if (i == R.id.radioTimeMode){
                     body.removeView(sampledInput);
-                    body.addView(timeInput, 1);
+                    body.addView(timeInput);
                     choiceMode = getResources().getString(R.string.TIME);
                 }else {
                     body.removeView(sampledInput);
@@ -261,17 +261,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public Bundle prepareData(){
-        try{
-            numberOfSample = Long.parseLong(sampledInput.getText().toString());
-        }catch (RuntimeException e) {
-            e.getStackTrace();
-        }
-
-        try {
-            numberOfSecond = Long.parseLong(timeInput.getText().toString());
-        }catch (Exception e){
-            e.getStackTrace();
-        }
+        getNmberOfSamplesOrTime();
 
         Double frequencyDouble = new Double(0);
         int indexfrequency = frequencyDouble.intValue();
@@ -315,8 +305,12 @@ public class MainActivity extends AppCompatActivity  {
         return bundle;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+    public void getNmberOfSamplesOrTime(){
+        try{
+            numberOfSample = Long.parseLong(sampledInput.getText().toString());
+        }catch (RuntimeException e) { }
+        try {
+            numberOfSecond = Long.parseLong(timeInput.getText().toString());
+        }catch (Exception e){ }
     }
 }

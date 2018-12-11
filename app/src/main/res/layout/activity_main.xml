@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:id="@+id/bodyMainActivity"
     tools:showIn="@layout/activity_main">
-
 
     <ListView
         android:id="@+id/listSensor"
@@ -18,83 +16,95 @@
         tools:ignore="Suspicious0dp"
         />
 
-    <EditText
-        android:id="@+id/sampledInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="@string/introduceSampleValue"
-        />
-
-    <EditText
-        android:id="@+id/timeInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="@string/introduceTimeValue"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bodyChild"
-        android:orientation="horizontal">
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listOfChoicesMode"
-            android:layout_weight="1"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioSampleMode"
-                android:layout_weight="1"
-                android:textSize="10sp"
-                android:text="@string/samplingMode"
-                />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioTimeMode"
-                android:textSize="10sp"
-                android:layout_weight="1"
-                android:text="@string/timingMode" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioUnlimitedTime"
-                android:textSize="10sp"
-                android:layout_weight="1"
-                android:text="@string/unlimitedMode" />
-        </RadioGroup>
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_alignParentBottom="true"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             >
-
-            <Button android:id="@+id/start"
+            <LinearLayout
+                android:id="@+id/bodyMainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Validate"
-                android:onClick="onClickRun"
-                android:drawableLeft="@drawable/ic_action_run"
-                android:textColor="@color/colorPrimaryDark"
-                />
-        </LinearLayout>
+                android:orientation="horizontal">
 
+                <EditText
+                    android:id="@+id/sampledInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="@string/introduceSampleValue"
+                    />
+
+                <EditText
+                    android:id="@+id/timeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="@string/introduceTimeValue"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bodyChild"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listOfChoicesMode"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioSampleMode"
+                        android:layout_weight="1"
+                        android:textSize="10sp"
+                        android:text="@string/samplingMode"
+                        />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioTimeMode"
+                        android:textSize="10sp"
+                        android:layout_weight="1"
+                        android:text="@string/timingMode" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioUnlimitedTime"
+                        android:textSize="10sp"
+                        android:layout_weight="1"
+                        android:text="@string/unlimitedMode" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <Button android:id="@+id/start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Validate"
+                    android:onClick="onClickRun"
+                    android:drawableLeft="@drawable/ic_action_run"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>
