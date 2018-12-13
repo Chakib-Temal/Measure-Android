@@ -260,7 +260,9 @@ public class MainActivity extends AppCompatActivity  {
 
         if (choiceMode == getResources().getString(R.string.SAMPLE) && numberOfSample == new Long(0)){
             return;
-        }else if (choiceMode == getResources().getString(R.string.TIME) && numberOfSecond == new Long(0)){
+        }else if (choiceMode == getResources().getString(R.string.TIME) && numberOfSecond == new Long(0)) {
+            return;
+        }else if (choiceMode == getResources().getString(R.string.UNLIMITED) && dataForNextActivities.isEmpty()){
             return;
         }else {
             if (saveModele){
