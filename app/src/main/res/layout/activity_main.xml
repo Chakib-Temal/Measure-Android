@@ -11,14 +11,17 @@
     <ListView
         android:id="@+id/listSensor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+
         android:descendantFocusability="blocksDescendants"
         tools:ignore="Suspicious0dp"
+        android:layout_weight="3"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
         <LinearLayout
             android:layout_alignParentBottom="true"

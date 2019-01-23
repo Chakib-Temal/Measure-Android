@@ -132,9 +132,5 @@ public class DataForNextActivityBdd {
         }
         runModeBdd.close();
         return data;
-
     }
-
-
-
 }

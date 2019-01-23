@@ -35,49 +35,48 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
 
-    private ListView listSensors = null;
-    private LinearLayout body = null;
-    private EditText sampledInput = null;
-    private EditText timeInput = null;
+    private ListView listSensors       = null;
+    private LinearLayout body          = null;
+    private EditText sampledInput      = null;
+    private EditText timeInput         = null;
     private RadioGroup choiceModeGroup = null;
-    private LinearLayout bodyChild = null;
+    private LinearLayout bodyChild     = null;
 
-    private SensorManager sensorManager = null;
-    private ComplexSensor accelerometer = null;
-    private ComplexSensor gyroscope = null;
-    private ComplexSensor aproximity = null;
-    private ComplexSensor photometer = null;
-    private ComplexSensor magnetic_field = null;
-    private ComplexSensor pressure = null;
+    private SensorManager sensorManager       = null;
+    private ComplexSensor accelerometer       = null;
+    private ComplexSensor gyroscope           = null;
+    private ComplexSensor aproximity          = null;
+    private ComplexSensor photometer          = null;
+    private ComplexSensor magnetic_field      = null;
+    private ComplexSensor pressure            = null;
     private ComplexSensor ambiant_temperature = null;
-    private ComplexSensor temperature = null;
-    private ComplexSensor orientation = null;
-    private ComplexSensor gravity = null;
+    private ComplexSensor temperature         = null;
+    private ComplexSensor orientation         = null;
+    private ComplexSensor gravity             = null;
     private ComplexSensor linear_acceleration = null;
-    private ComplexSensor relative_humidity = null;
-    private ComplexSensor rotation_vector = null;
+    private ComplexSensor relative_humidity   = null;
+    private ComplexSensor rotation_vector     = null;
 
     //to display available sensor
-    private List<ComplexSensor> availableSensors = new ArrayList<ComplexSensor>();
+    private List<ComplexSensor> availableSensors            = new ArrayList<ComplexSensor>();
     private List<DataForNextActivity> dataForNextActivities = new ArrayList<DataForNextActivity>();
 
     private List<ItemSpinner> itemsSpineer = new ArrayList<ItemSpinner>();
     private BasicSpinnerAdapter adapter;
 
     private long [] resultsOfCalibrage = {0,0,0,0};
-    private SharedPreferencesHelper preferences;
 
     private long numberOfSample = 0;
     private long numberOfSecond = 0;
 
     private String choiceMode ;
     private boolean saveModele = false;
-
+    private SharedPreferencesHelper preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /**
-         * Verification if the Smartphone is calibred with sensor
+         * Verification if the Smartphone is calibred
          * if it's not calibred, another activity will be called
          */
         this.testCalibrationOfSensors();
@@ -111,8 +110,7 @@ public class MainActivity extends AppCompatActivity  {
 
         /**
          *
-         here we recover the availability of sensors with static variable(ValidatorSensor),
-         finally we can use ComplexSensor to find the state of the sensor itself
+         send the list of all Sensors, and test if this sensors are available in our smartphone
          */
         ValidatorSensor.returnResults(beforeValidationOfAvailaible ,this.availableSensors);
 
@@ -147,7 +145,7 @@ public class MainActivity extends AppCompatActivity  {
                 actualSensor.getDataOfSensor().setFrequency( item.getFrequency());
 
                 if (!actualSensor.isSelected()){
-                    view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    view.setBackgroundColor(getResources().getColor(R.color.BlueSelect));
                     actualSensor.setSelected(true);
                     dataForNextActivities.add(actualSensor.getDataOfSensor());
                 }else {
@@ -184,6 +182,9 @@ public class MainActivity extends AppCompatActivity  {
         //end OnCreate(); here you can complete programme
     }
 
+    /**
+     * create Menu option
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

@@ -36,24 +36,24 @@ import java.util.List;
 public class RunSensorsActivity extends AppCompatActivity {
 
     protected List<DataForNextActivity> selectedSensors = new ArrayList<DataForNextActivity>();
-    protected SensorManager sensorManager = null;
-    protected List<ComplexSensor> mySensors = new ArrayList<ComplexSensor>();
+    protected SensorManager sensorManager               = null;
+    protected List<ComplexSensor> mySensors             = new ArrayList<ComplexSensor>();
     protected ArrayAdapter<ComplexSensor> adapter;
     protected ListView listSensors = null;
 
-    protected float [] valuesOfGyroscope = {0, 0, 0};
-    protected float [] valuesOfAccelerometer = {0, 0, 0};
-    protected float [] valuesOfProximity = {0, 0, 0};
-    protected float [] valuesOfPhotometer = {0, 0, 0};
+    protected float [] valuesOfGyroscope           = {0, 0, 0};
+    protected float [] valuesOfAccelerometer       = {0, 0, 0};
+    protected float [] valuesOfProximity           = {0, 0, 0};
+    protected float [] valuesOfPhotometer          = {0, 0, 0};
     protected float [] valuesOfAmbiant_temperature = {0, 0, 0};
-    protected float [] valuesOfGravity = {0, 0, 0};
+    protected float [] valuesOfGravity             = {0, 0, 0};
     protected float [] valuesOfLinear_acceleration = {0, 0, 0};
-    protected float [] valuesOfMagnetic_field = {0, 0, 0};
-    protected float [] valuesOfOrientation = {0, 0, 0};
-    protected float [] valuesOfPressure = {0, 0, 0};
-    protected float [] valuesOfRelative_humidity = {0, 0, 0};
-    protected float [] valuesOfRotation_vector = {0, 0, 0};
-    protected float [] valuesOfTemperature = {0, 0, 0};
+    protected float [] valuesOfMagnetic_field      = {0, 0, 0};
+    protected float [] valuesOfOrientation         = {0, 0, 0};
+    protected float [] valuesOfPressure            = {0, 0, 0};
+    protected float [] valuesOfRelative_humidity   = {0, 0, 0};
+    protected float [] valuesOfRotation_vector     = {0, 0, 0};
+    protected float [] valuesOfTemperature         = {0, 0, 0};
 
     private RunMode configuration;
     private String runMode ="";
@@ -69,7 +69,6 @@ public class RunSensorsActivity extends AppCompatActivity {
     private int compterIndexProximity = 0;
     private ValueOfSensor [] photomerValues;
     private int compterIndexPhometer = 0;
-
     private ValueOfSensor [] ambiant_temperatureValues;
     private int compterIndexAmbiant_temperature = 0;
     private ValueOfSensor [] gravityValues;
@@ -144,6 +143,9 @@ public class RunSensorsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Start Sensors
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -187,6 +189,9 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Stop Sensors , call Function stopSensors()
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -195,6 +200,9 @@ public class RunSensorsActivity extends AppCompatActivity {
         buttonStop.setText(R.string.waiting);
     }
 
+    /**
+     * prepars All Events Sensors
+     */
     final SensorEventListener acceleroEvenetListner = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
@@ -377,12 +385,15 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Stop Sensors EventButton
+     */
     public void onClickStopRuning(View view) {
         stopSensors();
     }
 
     /**
-     * GO TO THE GRAPHSDRAWING ACTIVITY
+     * Change the Layout , Use of ViewFlipper
      */
     public void onClickDrawGraphs(View view) {
         setContentView(activity_graph_drawing);
@@ -646,7 +657,7 @@ public class RunSensorsActivity extends AppCompatActivity {
             }
         }
 
-        if (rotation_vectorEvenetListner != null){
+        if (rotation_vectorValues != null){
             for (int i=0 ; i < compterIndexRotation_vector ; i++){
                 solar.setName(getResources().getString(R.string.ROTATION_VECTOR));
                 solar.setValueX(rotation_vectorValues[i].getValues()[0]);
@@ -674,37 +685,37 @@ public class RunSensorsActivity extends AppCompatActivity {
         for (ComplexSensor sensor : this.mySensors){
             int type = sensor.getSensor().getType();
             if (type == Sensor.TYPE_ACCELEROMETER){
-                this.accelerometerValues = new ValueOfSensor[this.necessaryIndex];
+                this.accelerometerValues       = new ValueOfSensor[this.necessaryIndex];
             }else if (type == Sensor.TYPE_GYROSCOPE){
-                this.gyroscopeValues = new ValueOfSensor[this.necessaryIndex];
+                this.gyroscopeValues           = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_PROXIMITY){
-                this.proximityValues = new ValueOfSensor[this.necessaryIndex];
+                this.proximityValues           = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_LIGHT){
-                this.photomerValues = new ValueOfSensor[this.necessaryIndex];
+                this.photomerValues            = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_AMBIENT_TEMPERATURE){
                 this.ambiant_temperatureValues = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_GRAVITY){
-                this.gravityValues = new ValueOfSensor[this.necessaryIndex];
+                this.gravityValues             = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_LINEAR_ACCELERATION){
                 this.linear_accelerationValues = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_MAGNETIC_FIELD){
-                this.magnetic_fieldValues = new ValueOfSensor[this.necessaryIndex];
+                this.magnetic_fieldValues      = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_ORIENTATION){
-                this.orientationValues = new ValueOfSensor[this.necessaryIndex];
+                this.orientationValues         = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_PRESSURE){
-                this.pressureValues = new ValueOfSensor[this.necessaryIndex];
+                this.pressureValues            = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_RELATIVE_HUMIDITY){
-                this.relative_humidityValues = new ValueOfSensor[this.necessaryIndex];
+                this.relative_humidityValues   = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_ROTATION_VECTOR){
-                this.rotation_vectorValues = new ValueOfSensor[this.necessaryIndex];
+                this.rotation_vectorValues     = new ValueOfSensor[this.necessaryIndex];
             }else if(type == Sensor.TYPE_TEMPERATURE){
-                this.temperatureValues = new ValueOfSensor[this.necessaryIndex];
+                this.temperatureValues         = new ValueOfSensor[this.necessaryIndex];
             }
         }
     }
 
     /**
-     * Class for the Adapter
+     * Class for the Adapter , ListView
      */
     private class SensorAdapter extends ArrayAdapter<ComplexSensor>{
         public SensorAdapter(@NonNull Context context, int resource, @NonNull List<ComplexSensor> objects) {
@@ -807,20 +818,3 @@ public class RunSensorsActivity extends AppCompatActivity {
         }
     }
 }
-
-/*
-add attribute     protected float [] valuesOfPhotometer = {0, 0, 0};
-private ValueOfSensor [] photomerValues;
-private int compterIndexPhometer = 0;
-
-InitialArray
-else if(type == Sensor.TYPE_LIGHT){
-                this.photomerValues = new ValueOfSensor[this.necessaryIndex];
-            }
-
-add events
-stop Sensors
-getView adapter
-saveData
-onClickDrawGraphs
- */
